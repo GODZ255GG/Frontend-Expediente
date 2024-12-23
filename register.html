@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Formulario de registro para Expediente Médico Seguro con datos personales, contactos de emergencia e información de salud.">
+    <title>Registro - EMS</title>
+    <link rel="stylesheet" href="css/registerstyles.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="img/logo.png" alt="Logo EMS">
+        </div>
+        <nav>
+            <a href="index.html">Inicio</a>
+            <a href="#infoSection" onclick="scrollToSection(event, 'infoSection')">Sobre nosotros</a>
+            <a href="login.html">Iniciar sesión</a>
+            <a href="register.html">Registrarse</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <form id="registration-form" class="form-container">
+            <h2>Datos personales</h2>
+            <div class="form-group">
+                <label for="nombre">Nombre completo*</label>
+                <input type="text" id="nombre" name="nombre" placeholder="Ingresa tu nombre completo" required>
+            </div>
+            <div class="form-group">
+                <label for="curp">CURP*</label>
+                <input type="text" id="curp" name="curp" placeholder="ej. NES897614NVXVYNA4" required>
+            </div>
+            <div class="form-group">
+                <label for="telefono">Número telefónico*</label>
+                <input type="tel" id="telefono" name="telefono" placeholder="Número a 10 dígitos" required>
+            </div>
+            <div class="form-group">
+                <label for="correo">Correo electrónico*</label>
+                <input type="email" id="correo" name="correo" placeholder="ejemplo@gmail.com" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Contraseña*</label>
+                <input type="password" id="password" name="password" placeholder="*********" required>
+            </div>
+            <div class="form-group">
+                <label for="fecha-nacimiento">Fecha de nacimiento*</label>
+                <input type="date" id="fecha-nacimiento" name="fecha-nacimiento" required>
+            </div>
+            <div class="form-group">
+                <label for="sexo">Sexo*</label>
+                <select id="sexo" name="sexo" required>
+                    <option value="">Selecciona una opción</option>
+                    <option value="masculino">Masculino</option>
+                    <option value="femenino">Femenino</option>
+                </select>
+            </div>
+
+            <h2>Contacto de emergencia</h2>
+            <div id="emergency-contacts">
+                <div class="contact">
+                    <div class="form-group">
+                        <label for="nombre-emergencia">Nombre completo*</label>
+                        <input type="text" id="nombre-emergencia" name="nombre-emergencia" placeholder="Nombre del contacto" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefono-emergencia">Número telefónico*</label>
+                        <input type="tel" id="telefono-emergencia" name="telefono-emergencia" placeholder="10 dígitos" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="parentesco">Parentesco *</label>
+                        <input type="text" id="parentesco" name="parentesco" placeholder="Relación con el contacto" required>
+                    </div>
+                    <div class="form-group">
+                        <label>¿Es tutor?*</label>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="tutor-yes" name="tutor" value="yes">
+                            <label for="tutor-yes">Sí</label>
+                            <input type="checkbox" id="tutor-no" name="tutor" value="no">
+                            <label for="tutor-no">No</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button id="add-contact" type="button" class="btn-secondary">+ Ingresar otro contacto de emergencia</button>
+
+            <h2>Información de salud</h2>
+            <div class="form-group">
+                <label for="enfermedades">Padecimientos crónicos*</label>
+                <input type="text" id="enfermedades" name="enfermedades" placeholder="Describa sus padecimientos" required>
+            </div>
+            <div class="form-group">
+                <label for="hospital">Hospital habitual*</label>
+                <input type="text" id="hospital" name="hospital" placeholder="Nombre del hospital" required>
+            </div>
+            <div class="form-group">
+                <label for="alergias">Alergias*</label>
+                <input type="text" id="alergias" name="alergias" placeholder="Describa sus alergias" required>
+            </div>
+
+            <div class="form-actions">
+                <button type="reset" class="btn-secondary">Cancelar</button>
+                <button type="submit" class="btn-primary">Registrarse</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

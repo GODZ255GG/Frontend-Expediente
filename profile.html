@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Información del Paciente</title>
+    <link rel="stylesheet" href="css/profilestyles.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="img/logo.png" alt="Logo EMS">
+        </div>
+        <nav>
+            <a href="indexdoctor.html">Inicio</a>
+            <a href="profile.html">Perfil</a>
+            <a>Salir</a>
+        </nav>
+    </header>
+    <div class="container">
+        <h1>Andrés Manuel López Obrador</h1>
+        <p><strong>CURP:</strong> HDSFS548714NBXHRMA5</p>
+        <p><strong>Fecha de nacimiento:</strong> 22 de enero de 2024</p>
+        <p><strong>Sexo:</strong> mujer</p>
+        <p><strong>Número telefónico:</strong> 2281546923</p>
+        <p><strong>Correo electrónico:</strong> ejemplo@gmail.com</p>
+        <br>
+        <section>
+            <h2>Contactos de emergencia</h2>
+            <div id="emergency-contact-list">
+                <div class="emergency-contact" id="contact-1">
+                    <div class="contact-info">
+                        <p><strong>Contacto de emergencia número uno</strong></p>
+                        <p><strong>Nombre completo:</strong> Diego Sanchez Peres</p>
+                        <p><strong>Número telefónico:</strong> 22815469520</p>
+                        <p><strong>Parentesco:</strong> Padre</p>
+                    </div>
+                    <div class="contact-actions">
+                        <button class="icon-btn" onclick="openEditModal('contact-1')">✏️</button>
+                        <button class="icon-btn" onclick="deleteContact('contact-1')">🗑️</button>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <button id="add-contact-btn">+ Ingresar otro contacto de emergencia</button>
+        </section>
+
+        <section>
+            <h2>Información de salud</h2>
+            <p><strong>Alergias:</strong> Paracetamol, penicilina, vacunas</p>
+            <p><strong>Enfermedades crónicas:</strong> Diabetes, hipertensión y cáncer</p>
+            <p><strong>Tratamiento actual:</strong> Una pastilla de paracetamol cada ocho horas</p>
+            <p><strong>Hospital adscrito:</strong> Clínica 66 Xalapa</p>
+        </section>
+    </div>
+
+    <!-- Modal para editar información -->
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeEditModal()">&times;</span>
+            <h2>Editar Contacto de Emergencia</h2>
+            <form id="edit-form">
+                <label for="edit-name">Nombre:</label>
+                <input type="text" id="edit-name" name="edit-name" required>
+                <label for="edit-number">número:</label>
+                <textarea id="edit-number" name="edit-number" required></textarea>
+                <label for="edit-family">Parentesco:</label>
+                <textarea id="edit-family" name="edit-family" required></textarea>
+                <div class="modal-actions">
+                    <button type="button" onclick="saveChanges()">Guardar</button>
+                    <button type="button" onclick="closeEditModal()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+<div id="add-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeAddModal()">&times;</span>
+        <h2>Agregar Contacto de Emergencia</h2>
+        <form id="add-contact-form">
+            <label for="contact-name">Nombre completo:</label>
+            <input type="text" id="contact-name" name="contact-name" placeholder="Ej. Juan Pérez" required>
+            <label for="contact-relationship">Parentesco:</label>
+            <input type="text" id="contact-relationship" name="contact-relationship" placeholder="Ej. Hermano" required>
+            <label for="contact-phone">Número telefónico:</label>
+            <input type="tel" id="contact-phone" name="contact-phone" placeholder="Ej. 555-555-5555" required>
+            <div class="modal-actions">
+                <button type="button" onclick="addContact()">Agregar</button>
+                <button type="button" onclick="closeAddModal()">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+    <script src="js/profilescript.js"></script>
+</body>
+</html>
+

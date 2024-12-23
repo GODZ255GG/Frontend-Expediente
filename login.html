@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expediente Médico Seguro</title>
+    <link rel="stylesheet" href="css/loginstyless.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="img/logo.png" alt="Logo EMS">
+        </div>
+        <nav>
+            <a href="index.html">Inicio</a>
+            <a href="#infoSection" onclick="scrollToSection(event, 'infoSection')">Sobre nosotros</a>
+            <a href="login.html">Iniciar sesión</a>
+            <a href="register.html">Registrarse</a>
+        </nav>
+    </header>
+    <div class="container">
+        <div class="header">
+            <h1><span>E</span>xpediente <span>M</span>édico <span>S</span>eguro</h1>
+        </div>
+        <div class="form-container">
+            <div class="tabs">
+                <button class="active" id="tab-paciente" onclick="showForm('paciente')">Paciente</button>
+                <button id="tab-medico" onclick="showForm('medico')">Médico</button>
+                <button id="tab-admin" onclick="showForm('administrador')">Administrador</button>
+            </div>
+            <form id="form-paciente" class="form">
+                <div class="form-group">
+                    <label for="curp">CURP</label>
+                    <input type="text" id="curp" placeholder="ej. NAAD010515MVZRVNA2">
+                </div>
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password">
+                </div>
+                <button class="btn-primary">Iniciar sesión</button>
+                <div class="register">
+                    ¿No tienes una cuenta? <a href="#">Regístrate</a>
+                </div>
+            </form>
+
+            <form id="form-medico" class="form" style="display: none;">
+                <div class="form-group">
+                    <label for="cedula">Cédula Profesional</label>
+                    <input type="text" id="cedula" placeholder="ej. 1234567">
+                </div>
+                <div class="form-group">
+                    <label for="password-medico">Contraseña</label>
+                    <input type="password" id="password-medico">
+                </div>
+                <button class="btn-primary">Iniciar sesión</button>
+            </form>
+
+            <form id="form-admin" class="form" style="display: none;">
+                <div class="form-group">
+                    <label for="correo">Correo</label>
+                    <input type="email" id="correo" placeholder="ej. admin@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="password-admin">Contraseña</label>
+                    <input type="password" id="password-admin">
+                </div>
+                <button class="btn-primary">Iniciar sesión</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/loginScript.js"></script>
+    <script src="js/scripts.js"></script>
+</body>
+</html>

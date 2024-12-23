@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expediente Médico Seguro</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="img/logo.png" alt="Logo EMS">
+        </div>
+        <nav>
+            <a href="index.html">Inicio</a>
+            <a href="#infoSection" onclick="scrollToSection(event, 'infoSection')">Sobre nosotros</a>
+            <a href="login.html">Iniciar sesión</a>
+            <a href="register.html">Registrarse</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div>
+            <h1><span>E</span>xpediente <span>M</span>édico <span>S</span>eguro</h1>
+            <button onclick="scrollToSection(event, 'infoSection')">Más información</button>
+        </div>
+        <img src="img/Doctor.png" alt="Doctor con estetoscopio">
+    </section>
+
+    <section class="info" id="infoSection">
+        <h2>Sobre nosotros</h2>
+        <p>
+            Somos una solución innovadora y adaptada a las necesidades del sector salud en México,
+            centralizando de forma segura y accesible la información médica de nuestros pacientes.
+        </p>
+        <div class="features">
+            <div class="feature">
+                <img src="img/consult_expedient.png" alt="Consulta tu expediente">
+                <p>Consulta tu expediente</p>
+            </div>
+            <div class="feature">
+                <img src="img/home_information.png" alt="Información en un solo lugar">
+                <p>Información en un solo lugar</p>
+            </div>
+            <div class="feature">
+                <img src="img/hom_emergency.png" alt="Contactos de emergencia">
+                <p>Contactos de emergencia</p>
+            </div>
+        </div>
+    </section>
+    <script src="js/scripts.js"></script>
+</body>
+</html>
+

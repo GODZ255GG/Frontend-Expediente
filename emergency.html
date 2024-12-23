@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergencias</title>
+    <link rel="stylesheet" href="css/emergencystyles.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="img/logo.png" alt="Logo EMS">
+        </div>
+        <nav>
+            <a href="indexdoctor.html">Inicio</a>
+            <a href="medicalrecord.html">Expedientes médicos</a>
+            <a href="emergency.html">Emergencias</a>
+            <a>Salir</a>
+        </nav>
+    </header>
+
+    <div class="patient-container">
+        <header>
+            <input type="text" id="search-input" placeholder="Buscar paciente por CURP" />
+                <button class="search-button">🔍</button>
+            </button>
+        </header>
+        <section class="patient-info">
+            <h1 id="patient-name">Nombre del paciente</h1>
+            <div class="emergencies">
+                <h2>Emergencias</h2>
+                <div class="emergency-entry">
+                    <p><strong>Fecha de emergencia:</strong> <span id="emergency-date-1">Fecha aquí</span></p>
+                    <p><strong>Diagnóstico de emergencia:</strong> <span id="emergency-diagnosis-1">Diagnóstico aquí</span></p>
+                    <p><strong>Tratamiento de emergencia:</strong> <span id="emergency-treatment-1">Tratamiento aquí</span></p>
+                </div>
+                <div class="emergency-entry">
+                    <p><strong>Fecha de emergencia:</strong> <span id="emergency-date-2">Fecha aquí</span></p>
+                    <p><strong>Diagnóstico de emergencia:</strong> <span id="emergency-diagnosis-2">Diagnóstico aquí</span></p>
+                    <p><strong>Tratamiento de emergencia:</strong> <span id="emergency-treatment-2">Tratamiento aquí</span></p>
+                </div>
+            </div>
+        </section>
+    </div>    
+
+    <script src="js/medicalrecord.js"></script>
+</body>
+</html>

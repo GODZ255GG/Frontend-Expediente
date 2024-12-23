@@ -1,0 +1,156 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #f9fbff;
+    background-image: url('https://img.freepik.com/vector-premium/estructuras-moleculares-hexagonales-abstractas-antecedentes-tecnologicos-estilo-cientifico-diseno-medico-ilustracion-vectorial_41981-2543.jpg?w=996');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.container {
+    width: 80%;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.doctor-container {
+    max-width: 800px;
+    margin: 30px auto;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.header {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.header input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.header .search-button {
+    background: #0062cc;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.header .search-button:hover {
+    background-color: #0056b3; 
+}
+
+.header .search-button img {
+    width: 20px; 
+    height: auto;
+}
+
+.profile {
+    margin-bottom: 20px;
+}
+
+.profile h2 {
+    margin: 0;
+}
+
+form fieldset {
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+form input, form button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn-primary {
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #1669c1;
+}
+
+.btn-secondary {
+    background-color: #ccc;
+    color: black;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.btn-secondary:hover {
+    background-color: #bbb;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  header .logo img {
+    max-width: 100%;
+    height: auto; 
+    width: 50px; 
+  }
+  
+  header .logo img {
+    height: auto; 
+    width: 50px; 
+    margin-right: 10px;
+  }
+  
+  header nav {
+    display: flex;
+    align-items: center;
+  }
+  
+  header nav a {
+    margin-left: 20px;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+  }

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Médico</title>
+    <link rel="stylesheet" href="css/registermedicstyles.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="img/logo.png" alt="Logo EMS">
+        </div>
+        <nav>
+            <a href="indexAdmin.html">Inicio</a>
+            <a href="registermedic.html">Registrar médico</a>
+            <a>Salir</a>
+        </nav>
+    </header>
+    <header class="header">
+        <input type="text" id="search-input" placeholder="Buscar médico por CURP">
+        <button class="search-button">🔍</button>
+        </button>
+    </header>    
+    <div class="container">
+        <div class="form-container">
+            <h2>Registro de Médico</h2>
+            <form id="registration-form">
+                <fieldset>
+                    <legend class="header-title">Información General</legend>
+                    <label for="curp">CURP</label>
+                    <input type="text" id="curp" name="curp" value="LOOB531113HVZRRA2" readonly>
+
+                    <label for="name">Nombre Completo</label>
+                    <input type="text" id="name" name="name" value="Andrés Manuel López Obrador" readonly>
+
+                    <label for="dob">Fecha de Nacimiento</label>
+                    <input type="text" id="dob" name="dob" value="22 de enero de 2024" readonly>
+
+                    <label for="gender">Sexo</label>
+                    <input type="text" id="gender" name="gender" value="Mujer" readonly>
+
+                    <label for="email">Correo Electrónico</label>
+                    <input type="text" id="email" name="email" value="andresmanueloobrador@gmail.com" readonly>
+
+                    <label for="phone">Número Telefónico</label>
+                    <input type="text" id="phone" name="phone" value="2281815805" readonly>
+                </fieldset>
+
+                <fieldset>
+                    <legend class="header-title">Información del Registro</legend>
+                    <label>Tipo de Personal*</label>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="role-doctor" name="role" value="doctor">
+                        <label for="role-doctor">Médico</label>
+                        <input type="checkbox" id="role-emergency" name="role" value="emergency">
+                        <label for="role-emergency">Personal de emergencia</label>
+                        <input type="checkbox" id="role-admin" name="role" value="admin">
+                        <label for="role-admin">Administrador</label>
+                        <br><br>
+                    </div>
+
+                    <label for="license">Cédula Profesional*</label>
+                    <input type="text" id="license" name="license" required>
+
+                    <label for="password">Contraseña*</label>
+                    <input type="password" id="password" name="password" required>
+
+                    <label for="hospital">Hospital donde labora*</label>
+                    <input type="text" id="hospital" name="hospital" required>
+
+                    <label for="medical-file">Archivo Médico (PDF)*</label>
+                    <input type="file" id="medical-file" name="medical-file" accept=".pdf" required>
+                </fieldset>
+
+                <div class="form-actions">
+                    <button type="reset" class="btn-secondary">Cancelar</button>
+                    <button type="submit" class="btn-primary">Registrar Médico</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="js/registermedic.js"></script>
+</body>
+</html>

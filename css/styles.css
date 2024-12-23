@@ -1,0 +1,142 @@
+body {
+  padding-top: 80px;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: #f9fbff;
+  background-image: url('https://img.freepik.com/vector-premium/estructuras-moleculares-hexagonales-abstractas-antecedentes-tecnologicos-estilo-cientifico-diseno-medico-ilustracion-vectorial_41981-2543.jpg?w=996'); 
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 20px; 
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+  box-sizing: border-box; 
+}
+
+header .logo img {
+  max-width: 100%;
+  height: auto; 
+  width: 50px; 
+}
+
+header .logo img {
+  height: auto; 
+  width: 50px; 
+  margin-right: 10px;
+}
+
+header nav {
+  display: flex;
+  align-items: center;
+}
+
+header nav a {
+  margin-left: 20px;
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+}
+
+.hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 100px 10%;
+  position: relative;
+}
+
+.hero h1 {
+  font-size: 48px;
+  line-height: 1.2;
+  color: #333;
+  margin: 0;
+}
+
+.hero h1 span {
+  color: #007BFF;
+}
+
+.hero img {
+  width: 400px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.hero button {
+  background-color: #007BFF;
+  color: white;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 18px;
+  margin-top: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.hero button:hover {
+  background-color: #0056b3;
+}
+
+.info {
+  display: block;
+  padding: 50px 10%;
+  text-align: center;
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 40px 10%;
+}
+
+.info h2 {
+  font-size: 32px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.info p {
+  font-size: 18px;
+  line-height: 1.6;
+  color: #555;
+}
+
+.features {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 30px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.feature {
+  text-align: center;
+  width: 250px;
+  background: #f9fbff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.feature img {
+  width: 100px;
+  margin-bottom: 10px;
+}
+
+.feature p {
+  font-size: 16px;
+  color: #333;
+}

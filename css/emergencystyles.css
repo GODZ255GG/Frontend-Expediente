@@ -1,0 +1,79 @@
+/* Original */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #f9fbff;
+    background-image: url('https://img.freepik.com/vector-premium/estructuras-moleculares-hexagonales-abstractas-antecedentes-tecnologicos-estilo-cientifico-diseno-medico-ilustracion-vectorial_41981-2543.jpg?w=996');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.patient-container {
+    max-width: 800px;
+    margin: 30px auto;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+header:first-of-type {
+    position: relative;
+    z-index: 10;
+}
+
+.patient-container header {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+header input[type="text"] {
+    width: calc(100% - 50px);
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    margin: 5px;
+}
+
+header button {
+    background: #0062cc;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+header button:hover {
+    background: #0051a3;
+}
+
+.patient-info h1 {
+    font-size: 24px;
+    color: #0062cc;
+    margin-bottom: 20px;
+}
+
+.patient-info .emergencies h2 {
+    font-size: 18px;
+    color: #333;
+    border-bottom: 2px solid #0062cc;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
+
+.emergency-entry {
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+}
+
+.emergency-entry p {
+    margin: 5px 0;
+    line-height: 1.5;
+}

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expediente médico</title>
+    <link rel="stylesheet" href="css/medicalrecordstyles.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <img src="img/logo.png" alt="Logo EMS">
+        </div>
+        <nav>
+            <a href="indexdoctor.html">Inicio</a>
+            <a href="medicalrecord.html">Expedientes médicos</a>
+            <a href="emergency.html">Emergencias</a>
+            <a>Salir</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="search-bar">
+            <input type="text" placeholder="Buscar paciente por CURP">
+            <button class="search-button">🔍</button>
+        </div>
+
+        <main>
+            <section class="profile">
+                <h1 id="patient-name">Nombre del paciente</h1>
+                <p><strong>Fecha de nacimiento:</strong> <span id="patient-dob">DD/MM/YYYY</span></p>
+                <p><strong>Sexo:</strong> <span id="patient-gender">Sexo</span></p>
+                <p><strong>Alergias:</strong> <span id="patient-allergies">Lista de alergias</span></p>
+                <p><strong>Enfermedades crónicas:</strong> <span id="patient-chronic-diseases">Lista de enfermedades crónicas</span></p>
+                <p><strong>Tratamiento actual:</strong> <span id="patient-current-treatment">Tratamiento actual</span></p>
+            </section>
+
+            <section class="medical-history">
+                <h2>Consultas médicas</h2>
+                <div id="consultation-list">
+                    <div class="consultation">
+                        <p><strong>Fecha:</strong> <span class="consultation-date">DD/MM/YYYY</span></p>
+                        <p><strong>Diagnóstico:</strong> <span class="consultation-diagnosis">Diagnóstico</span></p>
+                        <p><strong>Tratamiento:</strong> <span class="consultation-treatment">Tratamiento</span></p>
+                    </div>
+                </div>
+            </section>
+
+            <div class="actions">
+                <button id="open-emergency-modal">+ Registrar emergencia</button>
+                <button id="open-consultation-modal">+ Consulta médica</button>
+            </div>
+        </main>
+    </div>
+
+    <div id="emergency-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Registrar Emergencia</h3>
+            <label for="emergency-diagnosis">Diagnóstico de emergencia:</label>
+            <input type="text" id="emergency-diagnosis">
+            <label for="emergency-treatment">Tratamiento de emergencia:</label>
+            <input type="text" id="emergency-treatment">
+            <label for="emergency-date">Fecha de emergencia:</label>
+            <input type="date" id="emergency-date">
+            <div class="modal-actions">
+                <button id="save-emergency">Guardar</button>
+                <button id="cancel-emergency">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="consultation-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Registrar Consulta Médica</h3>
+            <label for="consultation-diagnosis">Diagnóstico:</label>
+            <input type="text" id="consultation-diagnosis">
+            <label for="consultation-treatment">Tratamiento:</label>
+            <input type="text" id="consultation-treatment">
+            <div class="modal-actions">
+                <button id="save-consultation">Registrar consulta</button>
+                <button id="cancel-consultation">Cancelar registro</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/medicalrecord.js"></script>
+</body>
+</html>
+

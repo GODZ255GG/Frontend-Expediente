@@ -13,7 +13,7 @@
             <img src="img/logo.png" alt="Logo EMS">
         </div>
         <nav>
-            <a href="indexdoctor.html">Inicio</a>
+            <a href="indexpacient.html">Inicio</a>
             <a href="profile.html">Perfil</a>
             <a>Salir</a>
         </nav>
@@ -61,12 +61,10 @@
             <span class="close-btn" onclick="closeEditModal()">&times;</span>
             <h2>Editar Contacto de Emergencia</h2>
             <form id="edit-form">
-                <label for="edit-name">Nombre:</label>
-                <input type="text" id="edit-name" name="edit-name" required>
-                <label for="edit-number">número:</label>
-                <textarea id="edit-number" name="edit-number" required></textarea>
+                <label for="edit-number">Número telefónico:</label>
+                <input type="tel" id="edit-number" name="edit-number" required>
                 <label for="edit-family">Parentesco:</label>
-                <textarea id="edit-family" name="edit-family" required></textarea>
+                <input type="text" id="edit-family" name="edit-family" required>
                 <div class="modal-actions">
                     <button type="button" onclick="saveChanges()">Guardar</button>
                     <button type="button" onclick="closeEditModal()">Cancelar</button>

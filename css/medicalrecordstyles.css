@@ -197,3 +197,34 @@ body {
     background: #dc3545;
     color: white;
 }
+
+#consultation-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.consultation {
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+    border-bottom: 2px solid #dcdcdc;
+}
+
+.consultation:last-child {
+    border-bottom: none;
+}
+
+
+.consultation p {
+    margin: 5px 0;
+}
+
+button.disabled {
+    opacity: 0.5 !important;
+    pointer-events: none !important;
+    background-color: #ccc !important;
+    color: #888 !important;
+    cursor: not-allowed !important;
+}

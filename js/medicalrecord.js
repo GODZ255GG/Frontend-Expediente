@@ -11,6 +11,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const prevButton = document.getElementById("prev-page");
     const nextButton = document.getElementById("next-page");
 
+    const updateButton = document.getElementById("update-button");
+
     const openModal = (modal) => {
         if (modal) {
             modal.classList.remove("hidden");
@@ -67,31 +69,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
     searchButton.addEventListener("click", async () => {
         const CURP = inputField.value.trim();
-
+    
         if (!CURP) {
             alert("Por favor, ingresa una CURP para buscar.");
             return;
         }
-
+    
         const expedienteData = await obtenerExpedienteMedico(CURP);
-        if (expedienteData) {
-            mostrarExpedienteMedico(expedienteData);
-            validarPaciente();
+        if (!expedienteData) {
+            return;
         }
-
+    
+        mostrarExpedienteMedico(expedienteData);
+        validarPaciente();
+    
         const total = await obtenerTotalConsultas(CURP);
         if (total !== null) {
             totalConsultas = total;
             totalPaginas = Math.ceil(totalConsultas / tamanioPagina); 
-
+    
             actualizarPaginacion();
-
+    
             const consultasData = await obtenerConsultasMedicas(CURP, paginaActual);
             if (consultasData) {
                 mostrarConsultas(consultasData);
             }
         }
-
+    
         openEmergencyBtn.classList.remove("disabled");
         openConsultationBtn.classList.remove("disabled");
         openEmergencyBtn.classList.remove("disabled");
@@ -130,9 +134,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 return null;
             }
     
-            const expedienteData = await expedienteResponse.json();    
-            idPacienteTemporal = expedienteData.resultado[0].idPaciente;    
-            return expedienteData;
+            const expedienteData = await expedienteResponse.json();
+            if (expedienteData.resultado && expedienteData.resultado.length > 0) {
+                idPacienteTemporal = expedienteData.resultado[0].idPaciente;
+                return expedienteData;
+            } else {
+                alert("No se encontraron datos para la CURP proporcionada.");
+            }
         } catch (error) {
             alert("Ocurrió un error inesperado al obtener el expediente médico.");
             console.error(error);
@@ -201,9 +209,9 @@ document.addEventListener("DOMContentLoaded", () => {
             <h1 id="patient-name">${pacienteNombre}</h1>
             <p><strong>Fecha de nacimiento:</strong> <span id="patient-dob">${pacienteFechaNacimiento}</span></p>
             <p><strong>Sexo:</strong> <span id="patient-gender">${pacienteSexo}</span></p>
-            <p><strong>Alergias:</strong> <span id="patient-allergies">${pacienteAlergias}</span></p>
-            <p><strong>Enfermedades crónicas:</strong> <span id="patient-chronic-diseases">${pacienteEnfermedadesCronicas}</span></p>
-            <p><strong>Tratamiento actual:</strong> <span id="patient-current-treatment">${pacienteTratamientoActual}</span></p>
+            <p><strong>Alergias:</strong> <div id="patient-allergies" class="editable-field" >${pacienteAlergias}</div></p>
+            <p><strong>Enfermedades crónicas:</strong> <div id="patient-chronic-diseases" class="editable-field" >${pacienteEnfermedadesCronicas}</div></p>
+            <p><strong>Tratamiento actual:</strong> <div id="patient-current-treatment" class="editable-field" >${pacienteTratamientoActual}</div></p>
         `;
 
         profileContainer.appendChild(expedienteInfo);
@@ -232,6 +240,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    //Paginación
     prevButton.addEventListener("click", () => {
         if (paginaActual > 1) {
             paginaActual--;
@@ -306,6 +315,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    //Registro
     async function registrarConsultaMedica(diagnostico, tratamiento) {
         try {
             const idPaciente = idPacienteTemporal;
@@ -365,7 +375,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
     
-
     //Validar paciente
     const validarPaciente = async () => {
         if (!idPacienteTemporal) {
@@ -392,19 +401,26 @@ document.addEventListener("DOMContentLoaded", () => {
     
             const openConsultationBtn = document.getElementById("open-consultation-modal");
             const validatedButton = document.getElementById("validated-button");
+            const updateButton = document.getElementById("update-button");
     
             if (data.mensaje === 'El paciente está validado.') {
-                validatedButton.setAttribute("disabled", "true");
                 validatedButton.style.display = 'none';
+
+                deshabilitarCamposEdicion();
+                updateButton.style.display = 'none';
     
                 openConsultationBtn.style.display = 'block';
-                openConsultationBtn.removeAttribute("disabled"); 
+                openConsultationBtn.removeAttribute("disabled");
                 openConsultationBtn.classList.remove("disabled");
             } else if (data.mensaje === 'El paciente no está validado.') {
                 validatedButton.removeAttribute("disabled");
-                validatedButton.style.display = 'block';
-    
-                openConsultationBtn.style.display = 'none'; 
+                validatedButton.style.display = 'inline-block';
+
+                habilitarCamposEdicion();
+                updateButton.removeAttribute("disabled");
+                updateButton.style.display = 'inline-block';
+
+                openConsultationBtn.style.display = 'none';
                 openConsultationBtn.setAttribute("disabled", "true");
                 openConsultationBtn.classList.add("disabled");
             } else {
@@ -417,43 +433,47 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("validated-button").style.display = 'none';
             document.getElementById("open-consultation-modal").style.display = 'none';
         }
-    };
+    };    
 
     const validarPacientePorCURP = async () => {
         const CURP = document.querySelector(".search-bar input").value.trim();
-
+    
         if (!CURP) {
             alert("Por favor, ingresa una CURP para validar al paciente.");
             return;
         }
-
+    
         if (!idPacienteTemporal) {
             alert("No se ha encontrado un paciente. Por favor, realiza una búsqueda primero.");
             return;
         }
-
+    
         try {
             const token = localStorage.getItem("token");
-
+    
             if (!token) {
                 alert("No se encontró un token válido. Por favor, inicia sesión.");
                 return;
             }
-
+    
             const response = await fetch(`${API_BASE_URL}/api/paciente/validarPaciente/${CURP}`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
             });
-
+    
             const data = await response.json();
-
+    
             if (data.mensaje === 'Paciente validado correctamente.') {
                 const validatedButton = document.getElementById("validated-button");
-                validatedButton.setAttribute("disabled", "true");
+                const updateButton = document.getElementById("update-button");
                 validatedButton.style.display = 'none';
+                updateButton.style.display = 'none';
+    
                 alert('Paciente validado correctamente.');
+    
+                await validarPaciente();
             } else {
                 console.error('Error al validar al paciente:', data.mensaje);
                 alert('Error al validar al paciente.');
@@ -462,7 +482,7 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error("Error al validar al paciente:", error);
             alert('Error al validar al paciente.');
         }
-    };
+    };    
 
     document.getElementById("validated-button")?.addEventListener("click", validarPacientePorCURP);
 
@@ -489,4 +509,72 @@ document.addEventListener("DOMContentLoaded", () => {
             return null;
         }
     }
+
+    //Corregir expediente
+    updateButton.addEventListener("click", async () => {
+        const alergiasField = document.getElementById("patient-allergies");
+        const enfermedadesCronicasField = document.getElementById("patient-chronic-diseases");
+        const tratamientoActualField = document.getElementById("patient-current-treatment");
+    
+        const alergias = alergiasField.textContent.trim();
+        const enfermedadesCronicas = enfermedadesCronicasField.textContent.trim();
+        const tratamientoActual = tratamientoActualField.textContent.trim();
+    
+        if (!alergias || !enfermedadesCronicas || !tratamientoActual) {
+            alert("Por favor, complete todos los campos antes de actualizar.");
+            return;
+        }
+    
+        const CURP = inputField.value.trim(); 
+    
+        if (!CURP) {
+            alert("No se encontró un CURP válido. Por favor, realiza una búsqueda primero.");
+            return;
+        }
+    
+        try {
+            const token = localStorage.getItem("token"); 
+    
+            if (!token) {
+                alert("No se encontró un token válido. Por favor, inicia sesión.");
+                return;
+            }
+    
+            const response = await fetch(`${API_BASE_URL}/api/expedienteMedico/corregirExpedienteMedico/${CURP}`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    alergias: alergias,
+                    enfermedadesCronicas: enfermedadesCronicas,
+                    tratamientoActual: tratamientoActual
+                })
+            });       
+    
+            const data = await response.json();
+    
+            if (response.ok) {
+                alert(data.mensaje); 
+            } else {
+                alert(`Error: ${data.error}`);
+            }
+        } catch (error) {
+            console.error("Error al actualizar el expediente médico:", error);
+            alert("Hubo un error al actualizar el expediente médico.");
+        }
+    });    
+
+    const habilitarCamposEdicion = () => {
+        document.getElementById("patient-allergies").contentEditable = true;
+        document.getElementById("patient-chronic-diseases").contentEditable = true;
+        document.getElementById("patient-current-treatment").contentEditable = true;
+    };
+
+    const deshabilitarCamposEdicion = () => {
+        document.getElementById("patient-allergies").contentEditable = false;
+        document.getElementById("patient-chronic-diseases").contentEditable = false;
+        document.getElementById("patient-current-treatment").contentEditable = false;
+    };
 });

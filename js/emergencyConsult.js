@@ -51,13 +51,8 @@ function mostrarConsultaEmergencia(consultaEmergencia) {
 
     const container = document.getElementById("emergency-entries-container");
     container.innerHTML = '';
-
     const pacienteNombre = "Nombre de paciente:" + consultaEmergencia.nombrePersona || "Nombre no disponible";
-    console.log("Nombre del paciente:", pacienteNombre); 
-
     const patientNameElement = document.getElementById("patient-name");
-    console.log(patientNameElement);  
-
     patientNameElement.textContent = pacienteNombre;
 
     const fechaFormateada = formatearFecha(consultaEmergencia.fechaEmergencia);
@@ -82,7 +77,6 @@ function formatearFecha(fechaISO) {
 
     const opcionesFormato = { year: 'numeric', month: 'long', day: 'numeric' };
     const fecha = new Date(fechaISO);
-
     return fecha.toLocaleDateString('es-MX', opcionesFormato);
 }
 

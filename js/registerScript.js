@@ -1,15 +1,39 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
     const form = document.getElementById("registration-form");
-    const emergencyButton = document.getElementById("add-emergency-contact");
-    const emergencySection = document.getElementById("emergency-contact-section");
+    const hospitalSelect = document.getElementById("hospital");
 
-    let contactCount = 1; // Contador de contactos de emergencia
+    // Llenar el comboBox de hospitales
+    async function cargarHospitales() {
+        try {
+            const response = await fetch("http://localhost:3000/api/hospital/obtenerHospitales");
+            if (!response.ok) {
+                throw new Error("Error al obtener la lista de hospitales.");
+            }
 
-    form.addEventListener("submit", function (event) {
-        event.preventDefault(); // Evitar envío automático
+            const hospitales = await response.json();
+            hospitalSelect.innerHTML = "<option value=''>Selecciona un hospital</option>"; // Limpiar y agregar opción por defecto
 
-        const requiredFields = document.querySelectorAll("[required]");
+            hospitales.forEach(hospital => {
+                const option = document.createElement("option");
+                option.value = hospital.idHospital;
+                option.textContent = hospital.nombreHospital;
+                hospitalSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error("Error al cargar hospitales:", error);
+            hospitalSelect.innerHTML = "<option value=''>Error al cargar hospitales</option>";
+        }
+    }
+
+    // Llamar a la función para cargar hospitales al inicio
+    cargarHospitales();
+
+    // Validación y envío del formulario
+    form.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
         let isValid = true;
+        const requiredFields = document.querySelectorAll("[required]");
 
         requiredFields.forEach(field => {
             if (!field.value.trim()) {
@@ -28,14 +52,50 @@ document.addEventListener("DOMContentLoaded", function () {
             isValid = false;
         }
 
-        if (isValid) {
-            alert("Formulario enviado con éxito.");
-            form.reset();
-        } else {
+        if (!isValid) {
             alert("Por favor, complete todos los campos obligatorios.");
+            return;
+        }
+
+        // Recolección de datos del formulario
+        const formData = {
+            nombre: document.getElementById("nombre").value,
+            fechaNacimiento: document.getElementById("fecha-nacimiento").value,
+            sexo: document.getElementById("sexo").value === "masculino" ? "M" : "F",
+            correo: document.getElementById("correo").value,
+            telefono: document.getElementById("telefono").value,
+            CURP: document.getElementById("curp").value,
+            contrasena: document.getElementById("password").value,
+            alergias: document.getElementById("alergias").value,
+            enfermedadesCronicas: document.getElementById("enfermedades").value,
+            tratamientoActual: document.getElementById("tratamiento").value,
+            hospitalRegistro: document.getElementById("hospital").value,
+        };
+
+        try {
+            const response = await fetch("http://localhost:3000/api/crearPaciente/crearPaciente", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || "Error al registrar al paciente.");
+            }
+
+            const result = await response.json();
+            alert(result.message || "Paciente registrado exitosamente.");
+            form.reset();
+        } catch (error) {
+            console.error("Error al enviar la solicitud:", error);
+            alert("Error al enviar la solicitud: " + error.message);
         }
     });
 
+    // Reiniciar los campos
     form.addEventListener("reset", function () {
         const requiredFields = document.querySelectorAll("[required]");
         requiredFields.forEach(field => {
@@ -45,33 +105,5 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("tutor-yes").checked = false;
         document.getElementById("tutor-no").checked = false;
     });
-
-    emergencyButton.addEventListener("click", function () {
-        contactCount += 1; // Incrementar contador de contactos
-
-        const contactDiv = document.createElement("div");
-        contactDiv.innerHTML = `
-            <h3>Contacto de emergencia ${contactCount}</h3>
-            <label for="emergency-name-${contactCount}">Nombre completo*</label>
-            <input type="text" id="emergency-name-${contactCount}" name="emergency-name-${contactCount}" required />
-
-            <label for="emergency-phone-${contactCount}">Número Telefónico*</label>
-            <input type="text" id="emergency-phone-${contactCount}" name="emergency-phone-${contactCount}" required />
-
-            <label for="emergency-relationship-${contactCount}">Parentesco*</label>
-            <input type="text" id="emergency-relationship-${contactCount}" name="emergency-relationship-${contactCount}" required />
-
-            <label>¿Es tutor?*</label>
-            <div>
-                <input type="radio" id="tutor-yes-${contactCount}" name="tutor-${contactCount}" value="yes" />
-                <label for="tutor-yes-${contactCount}">Sí</label>
-
-                <input type="radio" id="tutor-no-${contactCount}" name="tutor-${contactCount}" value="no" />
-                <label for="tutor-no-${contactCount}">No</label>
-            </div>
-        `;
-
-        contactDiv.style.marginTop = "20px";
-        emergencySection.appendChild(contactDiv);
-    });
 });
+

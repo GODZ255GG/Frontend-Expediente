@@ -82,7 +82,6 @@
                     </div>
                 </div>
             </div>
-            <button id="add-contact" type="button" class="btn-secondary">+ Ingresar otro contacto de emergencia</button>
 
             <h2>Información de salud</h2>
             <div class="form-group">
@@ -90,9 +89,15 @@
                 <input type="text" id="enfermedades" name="enfermedades" placeholder="Describa sus padecimientos" required>
             </div>
             <div class="form-group">
-                <label for="hospital">Hospital habitual*</label>
-                <input type="text" id="hospital" name="hospital" placeholder="Nombre del hospital" required>
+                <label for="tratamiento">Tratamiento actual*</label>
+                <input type="text" id="tratamiento" name="tratamiento" placeholder="Ingrese su tratamiento actual" required>
             </div>
+            <div class="form-group">
+                <label for="hospital">Hospital habitual*</label>
+                <select id="hospital" name="hospital" required>
+                    <option value="">Cargando hospitales...</option>
+                </select>
+            </div>            
             <div class="form-group">
                 <label for="alergias">Alergias*</label>
                 <input type="text" id="alergias" name="alergias" placeholder="Describa sus alergias" required>
@@ -105,6 +110,6 @@
         </form>
     </div>
 
-    <script src="script.js"></script>
+    <script src="js/registerScript.js"></script>
 </body>
 </html>

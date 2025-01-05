@@ -15,7 +15,7 @@
             <a href="indexdoctor.html">Inicio</a>
             <a href="medicalrecord.html">Expedientes médicos</a>
             <a href="emergency.html">Emergencias</a>
-            <a>Salir</a>
+            <a href="index.html">Salir</a>
         </nav>
     </header>
 
@@ -27,29 +27,26 @@
 
         <main>
             <section class="profile">
-                <h1 id="patient-name">Nombre del paciente</h1>
-                <p><strong>Fecha de nacimiento:</strong> <span id="patient-dob">DD/MM/YYYY</span></p>
-                <p><strong>Sexo:</strong> <span id="patient-gender">Sexo</span></p>
-                <p><strong>Alergias:</strong> <span id="patient-allergies">Lista de alergias</span></p>
-                <p><strong>Enfermedades crónicas:</strong> <span id="patient-chronic-diseases">Lista de enfermedades crónicas</span></p>
-                <p><strong>Tratamiento actual:</strong> <span id="patient-current-treatment">Tratamiento actual</span></p>
-            </section>
+                <h1 id="patient-name">Información del paciente</h1>
+                <div id="profile-container"></div>
+                <button id="validated-button" disabled>Validar Paciente</button>
+            </section>           
 
             <section class="medical-history">
                 <h2>Consultas médicas</h2>
                 <div id="consultation-list">
-                    <div class="consultation">
-                        <p><strong>Fecha:</strong> <span class="consultation-date">DD/MM/YYYY</span></p>
-                        <p><strong>Diagnóstico:</strong> <span class="consultation-diagnosis">Diagnóstico</span></p>
-                        <p><strong>Tratamiento:</strong> <span class="consultation-treatment">Tratamiento</span></p>
-                    </div>
+                </div>
+                <div class="pagination">
+                    <button id="prev-page" disabled>&laquo; Anterior</button>
+                    <button id="next-page">Siguiente &raquo;</button>
                 </div>
             </section>
 
             <div class="actions">
-                <button id="open-emergency-modal">+ Registrar emergencia</button>
-                <button id="open-consultation-modal">+ Consulta médica</button>
+                <button id="open-emergency-modal" class="disabled">+ Registrar emergencia</button>
+                <button id="open-consultation-modal" class="disabled">+ Consulta médica</button>
             </div>
+            
         </main>
     </div>
 

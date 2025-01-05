@@ -16,34 +16,26 @@
             <a href="indexdoctor.html">Inicio</a>
             <a href="medicalrecord.html">Expedientes médicos</a>
             <a href="emergency.html">Emergencias</a>
-            <a>Salir</a>
+            <a href="index.html">Salir</a>
         </nav>
     </header>
 
     <div class="patient-container">
         <header>
             <input type="text" id="search-input" placeholder="Buscar paciente por CURP" />
-                <button class="search-button">🔍</button>
-            </button>
+            <button class="search-button">🔍</button>
         </header>
         <section class="patient-info">
             <h1 id="patient-name">Nombre del paciente</h1>
             <div class="emergencies">
-                <h2>Emergencias</h2>
-                <div class="emergency-entry">
-                    <p><strong>Fecha de emergencia:</strong> <span id="emergency-date-1">Fecha aquí</span></p>
-                    <p><strong>Diagnóstico de emergencia:</strong> <span id="emergency-diagnosis-1">Diagnóstico aquí</span></p>
-                    <p><strong>Tratamiento de emergencia:</strong> <span id="emergency-treatment-1">Tratamiento aquí</span></p>
-                </div>
-                <div class="emergency-entry">
-                    <p><strong>Fecha de emergencia:</strong> <span id="emergency-date-2">Fecha aquí</span></p>
-                    <p><strong>Diagnóstico de emergencia:</strong> <span id="emergency-diagnosis-2">Diagnóstico aquí</span></p>
-                    <p><strong>Tratamiento de emergencia:</strong> <span id="emergency-treatment-2">Tratamiento aquí</span></p>
+                <div class="emergencies">
+                    <h2>Emergencia más reciente</h2>
+                    <div id="emergency-entries-container"></div>
                 </div>
             </div>
         </section>
-    </div>    
+    </div>
 
-    <script src="js/medicalrecord.js"></script>
+    <script src="js/emergencyConsult.js"></script>
 </body>
 </html>

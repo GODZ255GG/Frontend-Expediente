@@ -8,6 +8,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const cancelEmergencyBtn = document.getElementById("cancel-emergency");
     const cancelConsultationBtn = document.getElementById("cancel-consultation");
 
+    const prevButton = document.getElementById("prev-page");
+    const nextButton = document.getElementById("next-page");
+
     const openModal = (modal) => {
         if (modal) {
             modal.classList.remove("hidden");
@@ -29,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     cancelEmergencyBtn?.addEventListener("click", () => closeModal(emergencyModal));
     cancelConsultationBtn?.addEventListener("click", () => closeModal(consultationModal));
-    
+
     window.addEventListener("click", (event) => {
         if (event.target === emergencyModal) {
             closeModal(emergencyModal);
@@ -38,5 +41,418 @@ document.addEventListener("DOMContentLoaded", () => {
             closeModal(consultationModal);
         }
     });
-});
 
+    const API_BASE_URL = "http://localhost:3000";
+    const searchButton = document.querySelector(".search-button");
+    const inputField = document.querySelector(".search-bar input");
+    let idPacienteTemporal = null; 
+    let paginaActual = 1; 
+    let totalConsultas = 0; 
+    let totalPaginas = 1; 
+    const tamanioPagina = 5; 
+
+    const saveConsultationBtn = document.getElementById("save-consultation");
+
+    saveConsultationBtn?.addEventListener("click", async () => {
+        const diagnostico = document.getElementById("consultation-diagnosis").value.trim();
+        const tratamiento = document.getElementById("consultation-treatment").value.trim();
+        const fechaConsulta = new Date().toISOString();
+
+        if (!diagnostico || !tratamiento) {
+            alert("Por favor, ingresa el diagnóstico y el tratamiento.");
+            return;
+        }
+
+        await registrarConsultaMedica(diagnostico, tratamiento, fechaConsulta);
+    });
+
+    searchButton.addEventListener("click", async () => {
+        const CURP = inputField.value.trim();
+
+        if (!CURP) {
+            alert("Por favor, ingresa una CURP para buscar.");
+            return;
+        }
+
+        const expedienteData = await obtenerExpedienteMedico(CURP);
+        if (expedienteData) {
+            mostrarExpedienteMedico(expedienteData);
+            validarPaciente();
+        }
+
+        const total = await obtenerTotalConsultas(CURP);
+        if (total !== null) {
+            totalConsultas = total;
+            totalPaginas = Math.ceil(totalConsultas / tamanioPagina); 
+
+            actualizarPaginacion();
+
+            const consultasData = await obtenerConsultasMedicas(CURP, paginaActual);
+            if (consultasData) {
+                mostrarConsultas(consultasData);
+            }
+        }
+
+        openEmergencyBtn.classList.remove("disabled");
+        openConsultationBtn.classList.remove("disabled");
+        openEmergencyBtn.classList.remove("disabled");
+        document.getElementById("validated-button").classList.remove("disabled");
+    });
+
+    function actualizarPaginacion() {
+        prevButton.disabled = paginaActual === 1; 
+        nextButton.disabled = paginaActual === totalPaginas; 
+    }
+
+    async function obtenerExpedienteMedico(CURP) {
+        try {
+            const token = localStorage.getItem("token");
+    
+            if (!token) {
+                alert("No se encontró un token válido. Por favor, inicia sesión nuevamente.");
+                return;
+            }
+    
+            const expedienteResponse = await fetch(`${API_BASE_URL}/api/expedienteMedico/recuperar`, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ CURP: CURP })
+            });
+    
+            if (!expedienteResponse.ok) {
+                if (expedienteResponse.status === 404) {
+                    alert("No se encontraron datos para la CURP proporcionada.");
+                } else {
+                    alert("Error al recuperar los datos del expediente médico.");
+                }
+                return null;
+            }
+    
+            const expedienteData = await expedienteResponse.json();    
+            idPacienteTemporal = expedienteData.resultado[0].idPaciente;    
+            return expedienteData;
+        } catch (error) {
+            alert("Ocurrió un error inesperado al obtener el expediente médico.");
+            console.error(error);
+            return null;
+        }
+    }
+
+    async function obtenerConsultasMedicas(CURP, pagina) {
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                alert("No se encontró un token válido. Por favor, inicia sesión nuevamente.");
+                return null;
+            }
+
+            const consultasResponse = await fetch(`${API_BASE_URL}/api/consultaMedica/recuperarConsultas`, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    CURP: CURP,
+                    pagina: pagina,
+                    tamanioPagina: tamanioPagina
+                })
+            });
+
+            if (consultasResponse.ok) {
+                const consultasData = await consultasResponse.json();
+                return consultasData;
+            } else {
+                console.error("Error al recuperar las consultas médicas.");
+                return null;
+            }
+        } catch (error) {
+            alert("Ocurrió un error inesperado al obtener las consultas médicas.");
+            console.error(error);
+            return null;
+        }
+    }
+
+    function mostrarExpedienteMedico(data) {
+        if (!data || !data.resultado || data.resultado.length === 0) {
+            alert("No se encontraron datos para mostrar.");
+            return;
+        }
+
+        const profileContainer = document.getElementById("profile-container");
+
+        profileContainer.innerHTML = '';
+
+        const expediente = data.resultado[0];
+
+        const pacienteNombre = expediente.nombre || "No disponible";
+        const pacienteFechaNacimiento = formatearFecha(expediente.fechaNacimiento) || "No disponible";
+        const pacienteSexo = expediente.sexo === "M" ? "Masculino" : expediente.sexo === "F" ? "Femenino" : "No disponible";
+        const pacienteAlergias = expediente.alergias || "No disponible";
+        const pacienteEnfermedadesCronicas = expediente.enfermedadesCronicas || "No disponible";
+        const pacienteTratamientoActual = expediente.tratamientoActual || "No disponible";
+
+        const expedienteInfo = document.createElement('div');
+        expedienteInfo.classList.add('expediente-info');
+
+        expedienteInfo.innerHTML = `
+            <h1 id="patient-name">${pacienteNombre}</h1>
+            <p><strong>Fecha de nacimiento:</strong> <span id="patient-dob">${pacienteFechaNacimiento}</span></p>
+            <p><strong>Sexo:</strong> <span id="patient-gender">${pacienteSexo}</span></p>
+            <p><strong>Alergias:</strong> <span id="patient-allergies">${pacienteAlergias}</span></p>
+            <p><strong>Enfermedades crónicas:</strong> <span id="patient-chronic-diseases">${pacienteEnfermedadesCronicas}</span></p>
+            <p><strong>Tratamiento actual:</strong> <span id="patient-current-treatment">${pacienteTratamientoActual}</span></p>
+        `;
+
+        profileContainer.appendChild(expedienteInfo);
+
+        profileContainer.closest('.profile').classList.remove('hidden');
+    }
+
+    function mostrarConsultas(data) {
+        const consultationList = document.getElementById("consultation-list");
+        consultationList.innerHTML = '';
+
+        if (data && data.length > 0) {
+            data.forEach(consulta => {
+                const consultationDiv = document.createElement("div");
+                consultationDiv.classList.add("consultation");
+
+                consultationDiv.innerHTML = `
+                    <p><strong>Fecha:</strong> <span class="consultation-date">${formatearFecha(consulta.fechaConsulta)}</span></p>
+                    <p><strong>Diagnóstico:</strong> <span class="consultation-diagnosis">${consulta.diagnostico}</span></p>
+                    <p><strong>Tratamiento:</strong> <span class="consultation-treatment">${consulta.tratamiento}</span></p>
+                `;
+                consultationList.appendChild(consultationDiv);
+            });
+        } else {
+            consultationList.innerHTML = "<p>No hay consultas registradas para este paciente.</p>";
+        }
+    }
+
+    prevButton.addEventListener("click", () => {
+        if (paginaActual > 1) {
+            paginaActual--;
+            actualizarPaginacion();
+
+            const CURP = inputField.value.trim();
+            obtenerConsultasMedicas(CURP, paginaActual).then(consultasData => {
+                if (consultasData) {
+                    mostrarConsultas(consultasData);
+                }
+            });
+        }
+    });
+
+    nextButton.addEventListener("click", () => {
+        if (paginaActual < totalPaginas) {
+            paginaActual++;
+            actualizarPaginacion();
+
+            const CURP = inputField.value.trim();
+            obtenerConsultasMedicas(CURP, paginaActual).then(consultasData => {
+                if (consultasData) {
+                    mostrarConsultas(consultasData);
+                }
+            });
+        }
+    });
+
+    function formatearFecha(fechaISO) {
+        if (!fechaISO) return "Fecha no disponible";
+        const opcionesFormato = { year: 'numeric', month: 'long', day: 'numeric' };
+        const fecha = new Date(fechaISO);
+        return fecha.toLocaleDateString('es-MX', opcionesFormato);
+    }
+
+    async function obtenerTotalConsultas(CURP) {
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                alert("No se encontró un token válido. Por favor, inicia sesión nuevamente.");
+                return null;
+            }
+
+            const response = await fetch(`${API_BASE_URL}/api/consultaMedica/totalConsultas`, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ CURP: CURP })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                return data.totalConsultas;
+            } else {
+                console.error("Error al obtener el total de consultas.");
+                return null;
+            }
+        } catch (error) {
+            alert("Ocurrió un error inesperado al obtener el total de consultas.");
+            console.error(error);
+            return null;
+        }
+    }
+
+    async function registrarConsultaMedica(diagnostico, tratamiento, fechaConsulta) {
+        try {
+            const idPaciente = idPacienteTemporal; 
+    
+            if (!idPaciente || isNaN(parseInt(idPaciente, 10))) {
+                alert("El idPaciente no es válido o no está presente.");
+                return;
+            }
+    
+            const idPersonalMedico = localStorage.getItem('idPersonalMedico');
+    
+            if (!idPersonalMedico) {
+                alert("No se pudo obtener el id del médico.");
+                return;
+            }
+    
+            const consultaResponse = await fetch(`${API_BASE_URL}/api/consultaMedica/insertarConsultaMedica`, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    diagnostico: diagnostico,
+                    tratamiento: tratamiento,
+                    fechaConsulta: fechaConsulta,
+                    idPaciente: idPaciente,
+                    idPersonalMedico: idPersonalMedico
+                })
+            });
+    
+            if (consultaResponse.ok) {
+                alert("Consulta médica registrada con éxito.");
+                
+                setTimeout(async () => {
+                    const CURP = document.querySelector(".search-bar input").value.trim();
+                    const consultasData = await obtenerConsultasMedicas(CURP);
+                    if (consultasData) {
+                        mostrarConsultas(consultasData);
+                    }
+
+                    const expedienteData = await obtenerExpedienteMedico(CURP);
+                    if (expedienteData) {
+                        mostrarExpedienteMedico(expedienteData);
+                    }
+    
+                    closeModal(consultationModal);
+                }, 1000);
+            } else {
+                alert("Error al registrar la consulta médica.");
+            }
+        } catch (error) {
+            console.error("Error al registrar consulta médica:", error);
+            alert("Ocurrió un error al registrar la consulta médica.");
+        }
+    }
+
+    //Validar paciente
+    const validarPaciente = async () => {
+        if (!idPacienteTemporal) {
+            alert("No se ha encontrado un paciente. Por favor, realiza una búsqueda primero.");
+            return;
+        }
+    
+        try {
+            const token = localStorage.getItem("token");
+    
+            if (!token) {
+                alert("No se encontró un token válido. Por favor, inicia sesión.");
+                return;
+            }
+    
+            const response = await fetch(`${API_BASE_URL}/api/paciente/verificarValidacion/${idPacienteTemporal}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+    
+            const data = await response.json();
+    
+            const openConsultationBtn = document.getElementById("open-consultation-modal");
+            const validatedButton = document.getElementById("validated-button");
+    
+            if (data.mensaje === 'El paciente está validado.') {
+                validatedButton.setAttribute("disabled", "true");
+                validatedButton.style.display = 'none';
+    
+                openConsultationBtn.style.display = 'block';
+                openConsultationBtn.removeAttribute("disabled"); 
+                openConsultationBtn.classList.remove("disabled");
+            } else if (data.mensaje === 'El paciente no está validado.') {
+                validatedButton.removeAttribute("disabled");
+                validatedButton.style.display = 'block';
+    
+                openConsultationBtn.style.display = 'none'; 
+                openConsultationBtn.setAttribute("disabled", "true");
+                openConsultationBtn.classList.add("disabled");
+            } else {
+                console.error('Error al verificar la validación');
+                validatedButton.style.display = 'none';
+                openConsultationBtn.style.display = 'none';
+            }
+        } catch (error) {
+            console.error("Error al verificar el estado de validación:", error);
+            document.getElementById("validated-button").style.display = 'none';
+            document.getElementById("open-consultation-modal").style.display = 'none';
+        }
+    };
+
+    const validarPacientePorCURP = async () => {
+        const CURP = document.querySelector(".search-bar input").value.trim();
+
+        if (!CURP) {
+            alert("Por favor, ingresa una CURP para validar al paciente.");
+            return;
+        }
+
+        if (!idPacienteTemporal) {
+            alert("No se ha encontrado un paciente. Por favor, realiza una búsqueda primero.");
+            return;
+        }
+
+        try {
+            const token = localStorage.getItem("token");
+
+            if (!token) {
+                alert("No se encontró un token válido. Por favor, inicia sesión.");
+                return;
+            }
+
+            const response = await fetch(`${API_BASE_URL}/api/paciente/validarPaciente/${CURP}`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            const data = await response.json();
+
+            if (data.mensaje === 'Paciente validado correctamente.') {
+                const validatedButton = document.getElementById("validated-button");
+                validatedButton.setAttribute("disabled", "true");
+                validatedButton.style.display = 'none';
+                alert('Paciente validado correctamente.');
+            } else {
+                console.error('Error al validar al paciente:', data.mensaje);
+                alert('Error al validar al paciente.');
+            }
+        } catch (error) {
+            console.error("Error al validar al paciente:", error);
+            alert('Error al validar al paciente.');
+        }
+    };
+
+    document.getElementById("validated-button")?.addEventListener("click", validarPacientePorCURP);
+});

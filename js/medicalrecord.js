@@ -302,14 +302,13 @@ document.addEventListener("DOMContentLoaded", () => {
     async function registrarConsultaMedica(diagnostico, tratamiento, fechaConsulta) {
         try {
             const idPaciente = idPacienteTemporal; 
-    
+            const idPersonalMedico = obtenerIdUsuario();
+
             if (!idPaciente || isNaN(parseInt(idPaciente, 10))) {
                 alert("El idPaciente no es válido o no está presente.");
                 return;
             }
-    
-            const idPersonalMedico = localStorage.getItem('idPersonalMedico');
-    
+        
             if (!idPersonalMedico) {
                 alert("No se pudo obtener el id del médico.");
                 return;
@@ -455,4 +454,28 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     document.getElementById("validated-button")?.addEventListener("click", validarPacientePorCURP);
+
+    function obtenerIdUsuario() {
+        const token = localStorage.getItem("token");
+    
+        if (!token) {
+            alert("No se encontró un token válido. Por favor, inicia sesión.");
+            return null;
+        }
+    
+        try {
+            const payload = JSON.parse(atob(token.split('.')[1]));     
+            const idUsuario = payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"];
+    
+            if (!idUsuario) {
+                console.error("No se encontró el idUsuario en el token.");
+                return null;
+            }
+    
+            return idUsuario;
+        } catch (error) {
+            console.error("Error al decodificar el token:", error);
+            return null;
+        }
+    }
 });

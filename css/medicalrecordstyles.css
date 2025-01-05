@@ -110,6 +110,7 @@ body {
 .actions {
     display: flex;
     justify-content: space-between;
+    gap: 15px;
     margin-top: 20px;
 }
 
@@ -227,4 +228,35 @@ button.disabled {
     background-color: #ccc !important;
     color: #888 !important;
     cursor: not-allowed !important;
+}
+
+/* Estilo para los campos editables */
+.editable-field {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    font-size: 14px;
+    min-height: 40px;
+    transition: background-color 0.3s, border-color 0.3s;
+    cursor: text; 
+}
+
+.editable-field[contenteditable="true"] {
+    background-color: #fff; 
+    border-color: #000;    
+    cursor: text; 
+}
+
+.editable-field:focus {
+    outline: none;
+    border-color: #000;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.editable-field[contenteditable="false"] {
+    cursor: default; 
+    background-color: #f9f9f9;
+    border-color: #ddd;
 }

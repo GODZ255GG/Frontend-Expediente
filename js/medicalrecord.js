@@ -56,14 +56,13 @@ document.addEventListener("DOMContentLoaded", () => {
     saveConsultationBtn?.addEventListener("click", async () => {
         const diagnostico = document.getElementById("consultation-diagnosis").value.trim();
         const tratamiento = document.getElementById("consultation-treatment").value.trim();
-        const fechaConsulta = new Date().toISOString();
 
         if (!diagnostico || !tratamiento) {
             alert("Por favor, ingresa el diagnóstico y el tratamiento.");
             return;
         }
 
-        await registrarConsultaMedica(diagnostico, tratamiento, fechaConsulta);
+        await registrarConsultaMedica(diagnostico, tratamiento);
     });
 
     searchButton.addEventListener("click", async () => {
@@ -215,12 +214,12 @@ document.addEventListener("DOMContentLoaded", () => {
     function mostrarConsultas(data) {
         const consultationList = document.getElementById("consultation-list");
         consultationList.innerHTML = '';
-
+    
         if (data && data.length > 0) {
             data.forEach(consulta => {
                 const consultationDiv = document.createElement("div");
                 consultationDiv.classList.add("consultation");
-
+    
                 consultationDiv.innerHTML = `
                     <p><strong>Fecha:</strong> <span class="consultation-date">${formatearFecha(consulta.fechaConsulta)}</span></p>
                     <p><strong>Diagnóstico:</strong> <span class="consultation-diagnosis">${consulta.diagnostico}</span></p>
@@ -263,10 +262,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function formatearFecha(fechaISO) {
         if (!fechaISO) return "Fecha no disponible";
-        const opcionesFormato = { year: 'numeric', month: 'long', day: 'numeric' };
+        
         const fecha = new Date(fechaISO);
-        return fecha.toLocaleDateString('es-MX', opcionesFormato);
-    }
+        const dia = fecha.getUTCDate();
+        const mes = fecha.getUTCMonth(); 
+        const año = fecha.getUTCFullYear();
+        const meses = [
+            'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+            'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+        ];
+    
+        return `${dia} de ${meses[mes]} de ${año}`;
+    }    
 
     async function obtenerTotalConsultas(CURP) {
         try {
@@ -299,20 +306,23 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    async function registrarConsultaMedica(diagnostico, tratamiento, fechaConsulta) {
+    async function registrarConsultaMedica(diagnostico, tratamiento) {
         try {
-            const idPaciente = idPacienteTemporal; 
+            const idPaciente = idPacienteTemporal;
             const idPersonalMedico = obtenerIdUsuario();
-
+    
             if (!idPaciente || isNaN(parseInt(idPaciente, 10))) {
                 alert("El idPaciente no es válido o no está presente.");
                 return;
             }
-        
+    
             if (!idPersonalMedico) {
                 alert("No se pudo obtener el id del médico.");
                 return;
             }
+    
+            const fechaConsulta = new Date(); 
+            const fechaConsultaFormateada = fechaConsulta.toISOString(); 
     
             const consultaResponse = await fetch(`${API_BASE_URL}/api/consultaMedica/insertarConsultaMedica`, {
                 method: "POST",
@@ -323,7 +333,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 body: JSON.stringify({
                     diagnostico: diagnostico,
                     tratamiento: tratamiento,
-                    fechaConsulta: fechaConsulta,
+                    fechaConsulta: fechaConsultaFormateada,
                     idPaciente: idPaciente,
                     idPersonalMedico: idPersonalMedico
                 })
@@ -331,14 +341,14 @@ document.addEventListener("DOMContentLoaded", () => {
     
             if (consultaResponse.ok) {
                 alert("Consulta médica registrada con éxito.");
-                
+    
                 setTimeout(async () => {
                     const CURP = document.querySelector(".search-bar input").value.trim();
                     const consultasData = await obtenerConsultasMedicas(CURP);
                     if (consultasData) {
                         mostrarConsultas(consultasData);
                     }
-
+    
                     const expedienteData = await obtenerExpedienteMedico(CURP);
                     if (expedienteData) {
                         mostrarExpedienteMedico(expedienteData);
@@ -354,6 +364,7 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("Ocurrió un error al registrar la consulta médica.");
         }
     }
+    
 
     //Validar paciente
     const validarPaciente = async () => {

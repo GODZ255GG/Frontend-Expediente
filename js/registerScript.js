@@ -145,11 +145,11 @@ document.addEventListener("DOMContentLoaded", async function () {
 
             if (!contactoResponse.ok) {
                 const errorContacto = await contactoResponse.json();
-                throw new Error(errorContacto.error || "Error al registrar el contacto de emergencia.");
+                throw new Error(errorContacto.error || "Error al registrarse, inténtelo más tarde.");
             }
 
             const contactoResult = await contactoResponse.json();
-            alert(contactoResult.mensaje || "Paciente y contacto de emergencia registrados exitosamente.");
+            alert(contactoResult.mensaje || "Registro exitoso, por favor inicia sesión.");
             form.reset();
             window.location.href = "login.html";
         } catch (error) {

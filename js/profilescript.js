@@ -78,8 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Función para eliminar un contacto
     window.deleteContact = (id) => {
-        const contact = document.getElementById(id);
-        contact.remove();
+        deleteContacto(6);
     };
 
     // Abrir el modal para agregar un nuevo contacto
@@ -114,7 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function addContacto(nuevoContacto) {
     try {
-        const response = await fetch('https://21d64cmx-3000.usw3.devtunnels.ms/api/contactos/insertarContacto', {
+        const response = await fetch(API_BASE_URL + 'api/contactos/insertarContacto', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -136,7 +135,7 @@ async function addContacto(nuevoContacto) {
 
 async function editContacto(contacto) {
     try {
-        const response = await fetch('https://21d64cmx-3000.usw3.devtunnels.ms/api/contactos/actualizarContacto', {
+        const response = await fetch(API_BASE_URL + 'api/contactos/actualizarContacto', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -153,5 +152,23 @@ async function editContacto(contacto) {
     } catch (error) {
         console.error(error);
         alert('Error al actualizar el contacto');
+    }
+}
+
+async function deleteContacto(idContacto) {
+    try {
+        const response = await fetch(API_BASE_URL + `api/contactos/eliminarContacto/${idContacto}`, {
+            method: 'DELETE'
+        });
+
+        const data = await response.json();
+        alert(data.mensaje);
+
+        if (response.ok) {
+            window.location.reload();
+        }
+    } catch (error) {
+        console.error(error);
+        alert('Error al eliminar el contacto');
     }
 }

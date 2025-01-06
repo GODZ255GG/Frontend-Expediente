@@ -71,9 +71,15 @@ header button:hover {
     border-bottom: 1px solid #ddd;
     margin-bottom: 15px;
     padding-bottom: 10px;
+    word-wrap: break-word; 
+    overflow-wrap: break-word;
+    max-width: 100%; 
+    overflow: hidden;
 }
 
 .emergency-entry p {
     margin: 5px 0;
     line-height: 1.5;
+    word-wrap: break-word; 
+    overflow-wrap: break-word;
 }

@@ -230,7 +230,7 @@ button.disabled {
     cursor: not-allowed !important;
 }
 
-/* Estilo para los campos editables */
+/* Editable Fields */
 .editable-field {
     padding: 10px;
     margin-bottom: 15px;
@@ -240,13 +240,17 @@ button.disabled {
     font-size: 14px;
     min-height: 40px;
     transition: background-color 0.3s, border-color 0.3s;
-    cursor: text; 
+    cursor: text;
+    word-wrap: break-word; 
+    overflow-wrap: break-word; 
+    max-width: 100%; 
+    overflow: hidden;
 }
 
 .editable-field[contenteditable="true"] {
-    background-color: #fff; 
-    border-color: #000;    
-    cursor: text; 
+    background-color: #fff;
+    border-color: #000;
+    cursor: text;
 }
 
 .editable-field:focus {
@@ -256,7 +260,101 @@ button.disabled {
 }
 
 .editable-field[contenteditable="false"] {
-    cursor: default; 
+    cursor: default;
     background-color: #f9f9f9;
     border-color: #ddd;
+}
+
+.consultation {
+    position: relative;
+    padding: 15px;
+    border: 1px solid #ddd;
+    margin-bottom: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    word-wrap: break-word; 
+    overflow: hidden; 
+    max-width: 100%;
+}
+
+.consultation p {
+    margin: 5px 0;
+    line-height: 1.5;
+    word-wrap: break-word; 
+    overflow-wrap: break-word;
+}
+
+.button-top-right, .button-bottom-right {
+    position: absolute;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.button-top-right {
+    top: 10px;
+    right: 10px;
+}
+
+.button-bottom-right {
+    bottom: 10px;
+    right: 10px;
+}
+
+.button-top-right:hover, .button-bottom-right:hover {
+    background-color: #0056b3;
+}
+
+/* Upload Modal */
+#upload-file-modal .modal-content {
+    position: relative;
+    padding-bottom: 80px; 
+    width: 600px; 
+    max-width: 100%; 
+    overflow-y: auto;
+}
+
+#upload-file-modal form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; 
+}
+
+#upload-file-modal .modal-actions {
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    width: 100%; 
+    gap: 10px;
+}
+
+#upload-file-modal .modal-actions button {
+    padding: 8px 12px; 
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%; 
+    font-size: 14px; 
+}
+
+#upload-file-modal #upload-button {
+    background-color: #28a745;
+    color: white;
+}
+
+#upload-file-modal #upload-button:hover {
+    background-color: #218838;
+}
+
+#upload-file-modal #cancel-upload {
+    background-color: #dc3545;
+    color: white;
+}
+
+#upload-file-modal #cancel-upload:hover {
+    background-color: #c82333;
 }

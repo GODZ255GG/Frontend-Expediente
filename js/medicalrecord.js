@@ -52,7 +52,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 idPersonalMedico: localStorage.getItem("id")
             };
     
-            // Llamada a tu API REST
             const response = await fetch(API_BASE_URL + '/api/consultaEmergencia/insertar', {
                 method: 'POST',
                 headers: {
@@ -73,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
             alert('Hubo un error al guardar la consulta de emergencia.');
             console.error(error);
         }
-    });    
+    });
 
     window.addEventListener("click", (event) => {
         if (event.target === emergencyModal) {
@@ -94,7 +93,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let paginaActual = 1; 
     let totalConsultas = 0; 
     let totalPaginas = 1; 
-    const tamanioPagina = 5; 
+    const tamanioPagina = 5;
+    let auxAlergias = "", auxEnfermedadesCronicas = "";
 
     const saveConsultationBtn = document.getElementById("save-consultation");
 
@@ -245,6 +245,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const pacienteEnfermedadesCronicas = expediente.enfermedadesCronicas || "No disponible";
         const pacienteTratamientoActual = expediente.tratamientoActual || "No disponible";
 
+        auxAlergias = pacienteAlergias;
+        auxEnfermedadesCronicas = pacienteEnfermedadesCronicas;
+
         const expedienteInfo = document.createElement('div');
         expedienteInfo.classList.add('expediente-info');
 
@@ -260,12 +263,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         profileContainer.appendChild(expedienteInfo);
 
-        //profileContainer.closest('.profile').classList.remove('hidden');
         const editButton = document.getElementById("edit-expediente-btn");
         editButton.addEventListener("click", () => {
             openModal(document.getElementById("edit-expediente-modal"));
-            document.getElementById("edit-allergies").value = pacienteAlergias;
-            document.getElementById("edit-chronic-diseases").value = pacienteEnfermedadesCronicas;
         });
     }
 
@@ -300,8 +300,33 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     document.getElementById("save-edit-expediente")?.addEventListener("click", async () => {
-        const alergias = document.getElementById("edit-allergies").value.trim();
-        const enfermedades = document.getElementById("edit-chronic-diseases").value.trim();
+        if(document.getElementById("edit-allergies").value.trim() === "" && 
+        document.getElementById("edit-chronic-diseases").value.trim() === ""){
+            alert("No se puede guardar información vacía.");
+            return;
+        }
+        
+        let alergias = "";
+        if( !(document.getElementById("edit-allergies").value.trim() === "") ){
+            if(document.getElementById("edit-allergies").value.trim() === "No disponible"){
+                document.getElementById("edit-allergies").value = "";
+            }
+
+            alergias = auxAlergias + ', ' + document.getElementById("edit-allergies").value.trim();
+        }else{
+            alergias = auxAlergias;
+        }
+
+        let enfermedades = "";
+        if( !(document.getElementById("edit-chronic-diseases").value.trim() === "")){
+            if(document.getElementById("edit-chronic-diseases").value.trim() === "No disponible"){
+                document.getElementById("edit-chronic-diseases").value = "";
+            }
+
+            enfermedades = auxEnfermedadesCronicas + ', ' + document.getElementById("edit-chronic-diseases").value.trim();
+        }else{
+            enfermedades = auxEnfermedadesCronicas
+        }
 
         if (!idPacienteTemporal) {
             alert("ID de paciente no encontrado.");
@@ -309,6 +334,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         await actualizarExpediente(inputField.value.trim(), alergias, enfermedades);
+        document.getElementById("edit-allergies").value = '';
+        document.getElementById("edit-chronic-diseases").value = '';
         closeModal(document.getElementById("edit-expediente-modal"));
     });
 

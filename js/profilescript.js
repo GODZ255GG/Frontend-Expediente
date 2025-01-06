@@ -1,11 +1,11 @@
 const API_BASE_URL = "https://21d64cmx-3000.usw3.devtunnels.ms/";
+let contactoEnEdicion = 0;
+let contactos;
 
 document.addEventListener("DOMContentLoaded", () => {
     const editModal = document.getElementById("edit-modal");
     const addModal = document.getElementById("add-modal");
-    const editForm = document.getElementById("edit-form");
     const emergencyContactList = document.getElementById("emergency-contact-list");
-    let currentEditId = null;
 
     // Función para enviar credenciales y recibir el token
     async function obtenerContactos(idPaciente) {
@@ -19,38 +19,57 @@ document.addEventListener("DOMContentLoaded", () => {
             // Validamos si la respuesta no es satisfactoria (status >= 400)
             if (!response.ok) throw new Error('Error al obtener contactos');
 
-            const contactos = await response.json();
-                emergencyContactList.innerHTML = ''; // Limpiar la lista
+            contactos = await response.json();
+            emergencyContactList.innerHTML = ''; // Limpiar la lista
 
-                // Crear los elementos de contacto
-                contactos.forEach(contacto => {
-                    const contactElement = document.createElement('div');
-                    contactElement.classList.add('emergency-contact');
-                    contactElement.id = `contact-${contacto.idInformacionEmergencia}`;
-                    contactElement.innerHTML = `
-                        <div class="contact-info">
-                            <p><strong>${contacto.contactoEmergencia}</strong></p>
-                            <p><strong>Teléfono:</strong> ${contacto.telefonoContacto1}</p>
-                            <p><strong>Parentesco:</strong> ${contacto.parentesco}</p>
-                        </div>
-                        <div class="contact-actions">
-                            <button class="icon-btn" onclick="openEditModal('contact-${contacto.idInformacionEmergencia}')">✏️</button>
-                            <button class="icon-btn" onclick="deleteContact(${contacto.idInformacionEmergencia})">🗑️</button>
-                        </div>
-                    `;
-                    emergencyContactList.appendChild(contactElement);
-                });
+            let tutor = "";
+
+            // Crear los elementos de contacto
+            contactos.forEach(contacto => {
+                tutor = contacto.esTutor ? "Sí" : "No";
+
+                const contactElement = document.createElement('div');
+                contactElement.classList.add('emergency-contact');
+                contactElement.id = `contact-${contacto.idInformacionEmergencia}`;
+                contactElement.innerHTML = `
+                    <div class="contact-info">
+                        <p><strong>${contacto.contactoEmergencia}</strong></p>
+                        <p><strong>Teléfono:</strong> ${contacto.telefonoContacto1}</p>
+                        <p><strong>Parentesco:</strong> ${contacto.parentesco}</p>
+                        <p><strong>Es tutor:</strong>${tutor}</p>
+                    </div>
+                    <div class="contact-actions">
+                        <button class="icon-btn" onclick="openEditModal(
+                            ${contacto.idInformacionEmergencia},
+                            ${contacto.telefonoContacto1},
+                            '${contacto.parentesco}',
+                            '${contacto.esTutor}')">✏️</button>
+                        <button class="icon-btn" onclick="deleteContact(${contacto.idInformacionEmergencia})">🗑️</button>
+                    </div>
+                `;
+                emergencyContactList.appendChild(contactElement);
+            });
+
+            const addContactBtn = document.getElementById("add-contact-btn");
+            if (contactos.length >= 2) {
+                addContactBtn.disabled = true;  // Deshabilitar el botón
+            } else {
+                addContactBtn.disabled = false; // Habilitar el botón si hay menos de 2 contactos
+            }
         } catch (err) {
             console.error(error);
             alert('Error al cargar los contactos de emergencia');
         }
     }
 
-    obtenerContactos(1);
+    obtenerContactos(localStorage.getItem("id"));
 
     // Función para abrir el modal de edición
-    window.openEditModal = (id) => {
-        
+    window.openEditModal = (id, telefono, parentesco, tutor) => {
+        contactoEnEdicion = id;
+        document.getElementById("edit-number").value = telefono;
+        document.getElementById("edit-family").value = parentesco;
+        document.getElementById("is-tutor-edit").checked = tutor === 'true';
         editModal.style.display = "flex";
     };
 
@@ -63,14 +82,25 @@ document.addEventListener("DOMContentLoaded", () => {
     window.saveChanges = () => {
         const number = document.getElementById("edit-number").value;
         const family = document.getElementById("edit-family").value;
-        const contact = document.getElementById(currentEditId);
+        const esTutor = document.getElementById("is-tutor-edit").checked;
+
+        // Validaciones
+        if (!validatePhone(number)) {
+            alert("El teléfono debe contener solo números y tener al menos 10 dígitos.");
+            return;
+        }
+
+        if (!validateText(family)) {
+            alert("El parentesco solo puede contener letras y espacios.");
+            return;
+        }
 
         const contactoActualizado = {
-            idPaciente: 1,
-            idInformacionEmergencia: 6, //parseInt(currentEditId.split('-')[1]), // Obtener el ID del contacto
+            idPaciente: localStorage.getItem("id"),
+            idInformacionEmergencia: contactoEnEdicion, 
             telefonoContacto1: number,
             parentesco: family,
-            esTutor: 1 //treatment === 'Sí' ? 1 : 0
+            esTutor: esTutor
         };
 
         editContacto(contactoActualizado);
@@ -78,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Función para eliminar un contacto
     window.deleteContact = (id) => {
-        deleteContacto(6);
+        deleteContacto(id);
     };
 
     // Abrir el modal para agregar un nuevo contacto
@@ -97,14 +127,31 @@ document.addEventListener("DOMContentLoaded", () => {
         const name = document.getElementById("contact-name").value;
         const relationship = document.getElementById("contact-relationship").value;
         const phone = document.getElementById("contact-phone").value;
+        const esTutor = document.getElementById("is-tutor").checked;
+
+        // Validaciones
+        if (!validateText(name)) {
+            alert("El nombre solo puede contener letras y espacios.");
+            return;
+        }
+
+        if (!validateText(relationship)) {
+            alert("El parentesco solo puede contener letras y espacios.");
+            return;
+        }
+
+        if (!validatePhone(phone)) {
+            alert("El teléfono debe contener solo números y tener al menos 10 dígitos.");
+            return;
+        }
 
         const nuevoContacto = {
             contactoEmergencia: name,
             telefonoContacto1: phone,
             parentesco: relationship,
-            esTutor: 0,
-            idPaciente: 1,
-            esRegistroPaciente: 1
+            esTutor: esTutor,
+            idPaciente: localStorage.getItem("id"),
+            esRegistroPaciente: 0
         };
 
         addContacto(nuevoContacto);
@@ -172,3 +219,15 @@ async function deleteContacto(idContacto) {
         alert('Error al eliminar el contacto');
     }
 }
+
+// Función para validar que solo contenga letras y espacios
+const validateText = (text) => {
+    const regex = /^[a-zA-ZÁÉÍÓÚáéíóúÑñ\s]+$/;
+    return regex.test(text);
+};
+
+// Función para validar que solo contenga números y tenga al menos 10 dígitos
+const validatePhone = (phone) => {
+    const regex = /^[0-9]{10,}$/;
+    return regex.test(phone);
+};

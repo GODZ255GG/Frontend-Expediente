@@ -38,6 +38,42 @@ document.addEventListener("DOMContentLoaded", () => {
     cancelConsultationBtn?.addEventListener("click", () => closeModal(consultationModal));
     cancelUploadButton?.addEventListener("click", () => closeModal(uploadFileModal));
 
+    document.getElementById('save-emergency').addEventListener('click', async () => {
+        try {
+
+            const fechaConsulta = new Date(); 
+            const fechaConsultaFormateada = fechaConsulta.toISOString(); 
+            
+            const consultaEmergencia = {
+                diagnosticoEmergencia: document.getElementById("emergency-diagnosis").value.trim(),
+                tratamientoEmergencia: document.getElementById("emergency-treatment").value.trim(),
+                fechaEmergencia: fechaConsultaFormateada,
+                idPaciente: idPacienteTemporal,
+                idPersonalMedico: localStorage.getItem("id")
+            };
+    
+            const response = await fetch(API_BASE_URL + '/api/consultaEmergencia/insertar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(consultaEmergencia)
+            });
+    
+            const data = await response.json();
+    
+            if (response.ok) {
+                alert('Consulta de emergencia guardada correctamente.');
+                closeModal(emergencyModal);
+            } else {
+                alert(`Error: ${data.mensaje}`);
+            }
+        } catch (error) {
+            alert('Hubo un error al guardar la consulta de emergencia.');
+            console.error(error);
+        }
+    });
+
     window.addEventListener("click", (event) => {
         if (event.target === emergencyModal) {
             closeModal(emergencyModal);
@@ -57,7 +93,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let paginaActual = 1; 
     let totalConsultas = 0; 
     let totalPaginas = 1; 
-    const tamanioPagina = 5; 
+    const tamanioPagina = 5;
+    let auxAlergias = "", auxEnfermedadesCronicas = "";
 
     const saveConsultationBtn = document.getElementById("save-consultation");
 
@@ -208,6 +245,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const pacienteEnfermedadesCronicas = expediente.enfermedadesCronicas || "No disponible";
         const pacienteTratamientoActual = expediente.tratamientoActual || "No disponible";
 
+        auxAlergias = pacienteAlergias;
+        auxEnfermedadesCronicas = pacienteEnfermedadesCronicas;
+
         const expedienteInfo = document.createElement('div');
         expedienteInfo.classList.add('expediente-info');
 
@@ -218,12 +258,90 @@ document.addEventListener("DOMContentLoaded", () => {
             <p><strong>Alergias:</strong> <div id="patient-allergies" class="editable-field" >${pacienteAlergias}</div></p>
             <p><strong>Enfermedades crónicas:</strong> <div id="patient-chronic-diseases" class="editable-field" >${pacienteEnfermedadesCronicas}</div></p>
             <p><strong>Tratamiento actual:</strong> <div id="patient-current-treatment" class="editable-field" >${pacienteTratamientoActual}</div></p>
+            <button id="edit-expediente-btn">Editar Expediente</button>
         `;
 
         profileContainer.appendChild(expedienteInfo);
 
-        profileContainer.closest('.profile').classList.remove('hidden');
+        const editButton = document.getElementById("edit-expediente-btn");
+        editButton.addEventListener("click", () => {
+            openModal(document.getElementById("edit-expediente-modal"));
+        });
     }
+
+    async function actualizarExpediente(CURP, alergias, enfermedadesCronicas) {
+        try {
+            const token = localStorage.getItem("token");
+
+            const response = await fetch(`${API_BASE_URL}/api/expedienteMedico/modificar`, {
+                method: "PUT",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ CURP, alergias, enfermedadesCronicas })
+            });
+
+            if (!response.ok) {
+                alert("Error al actualizar el expediente médico.");
+                return;
+            }
+
+            alert("Expediente médico actualizado con éxito.");
+
+            const updatedData = await obtenerExpedienteMedico(CURP);
+            if (updatedData) {
+                mostrarExpedienteMedico(updatedData);
+            }
+        } catch (error) {
+            alert("Ocurrió un error inesperado al actualizar el expediente médico.");
+            console.error(error);
+        }
+    }
+
+    document.getElementById("save-edit-expediente")?.addEventListener("click", async () => {
+        if(document.getElementById("edit-allergies").value.trim() === "" && 
+        document.getElementById("edit-chronic-diseases").value.trim() === ""){
+            alert("No se puede guardar información vacía.");
+            return;
+        }
+        
+        let alergias = "";
+        if( !(document.getElementById("edit-allergies").value.trim() === "") ){
+            if(document.getElementById("edit-allergies").value.trim() === "No disponible"){
+                document.getElementById("edit-allergies").value = "";
+            }
+
+            alergias = auxAlergias + ', ' + document.getElementById("edit-allergies").value.trim();
+        }else{
+            alergias = auxAlergias;
+        }
+
+        let enfermedades = "";
+        if( !(document.getElementById("edit-chronic-diseases").value.trim() === "")){
+            if(document.getElementById("edit-chronic-diseases").value.trim() === "No disponible"){
+                document.getElementById("edit-chronic-diseases").value = "";
+            }
+
+            enfermedades = auxEnfermedadesCronicas + ', ' + document.getElementById("edit-chronic-diseases").value.trim();
+        }else{
+            enfermedades = auxEnfermedadesCronicas
+        }
+
+        if (!idPacienteTemporal) {
+            alert("ID de paciente no encontrado.");
+            return;
+        }
+
+        await actualizarExpediente(inputField.value.trim(), alergias, enfermedades);
+        document.getElementById("edit-allergies").value = '';
+        document.getElementById("edit-chronic-diseases").value = '';
+        closeModal(document.getElementById("edit-expediente-modal"));
+    });
+
+    document.getElementById("cancel-edit-expediente")?.addEventListener("click", () =>{
+        closeModal(document.getElementById("edit-expediente-modal"));
+    });
 
     function mostrarConsultas(data) {
         const consultationList = document.getElementById("consultation-list");

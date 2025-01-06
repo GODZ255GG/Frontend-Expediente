@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     const emergencyModal = document.getElementById("emergency-modal");
     const consultationModal = document.getElementById("consultation-modal");
+    const uploadFileModal = document.getElementById("upload-file-modal");
 
     const openEmergencyBtn = document.getElementById("open-emergency-modal");
     const openConsultationBtn = document.getElementById("open-consultation-modal");
@@ -12,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const nextButton = document.getElementById("next-page");
 
     const updateButton = document.getElementById("update-button");
+    const cancelUploadButton = document.getElementById("cancel-upload");
 
     const openModal = (modal) => {
         if (modal) {
@@ -34,6 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     cancelEmergencyBtn?.addEventListener("click", () => closeModal(emergencyModal));
     cancelConsultationBtn?.addEventListener("click", () => closeModal(consultationModal));
+    cancelUploadButton?.addEventListener("click", () => closeModal(uploadFileModal));
 
     window.addEventListener("click", (event) => {
         if (event.target === emergencyModal) {
@@ -41,6 +44,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         if (event.target === consultationModal) {
             closeModal(consultationModal);
+        }
+        if (event.target === uploadFileModal) {
+            closeModal(uploadFileModal);
         }
     });
 
@@ -232,8 +238,25 @@ document.addEventListener("DOMContentLoaded", () => {
                     <p><strong>Fecha:</strong> <span class="consultation-date">${formatearFecha(consulta.fechaConsulta)}</span></p>
                     <p><strong>Diagnóstico:</strong> <span class="consultation-diagnosis">${consulta.diagnostico}</span></p>
                     <p><strong>Tratamiento:</strong> <span class="consultation-treatment">${consulta.tratamiento}</span></p>
+                    <button class="button-top-right" data-id="${consulta.idConsultaMedica}">Descargar receta</button>
+                    <button class="button-bottom-right" data-id="${consulta.idConsultaMedica}">Subir receta</button>
                 `;
+    
                 consultationList.appendChild(consultationDiv);
+                verificarArchivoEnConsulta(consulta.idConsultaMedica);
+
+                const downloadButton = consultationDiv.querySelector(".button-top-right");
+                downloadButton.addEventListener("click", () => {
+                    const idConsultaMedica = downloadButton.getAttribute("data-id");
+                    descargarArchivo(idConsultaMedica);
+                });
+
+                const uploadButton = consultationDiv.querySelector(".button-bottom-right");
+                uploadButton.addEventListener("click", () => {
+                    const idConsultaMedica = uploadButton.getAttribute("data-id");
+                    openModal(uploadFileModal); 
+                    uploadFileModal.setAttribute('data-id-consulta', idConsultaMedica); 
+                });
             });
         } else {
             consultationList.innerHTML = "<p>No hay consultas registradas para este paciente.</p>";
@@ -576,5 +599,125 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("patient-allergies").contentEditable = false;
         document.getElementById("patient-chronic-diseases").contentEditable = false;
         document.getElementById("patient-current-treatment").contentEditable = false;
+    };
+
+    //Archivo de consulta
+    const verificarArchivoEnConsulta = async (idConsultaMedica) => {
+        try {
+            const token = localStorage.getItem("token");
+
+            if (!token) {
+                alert("No se encontró un token válido. Por favor, inicia sesión.");
+                return;
+            }
+
+            const response = await fetch(`${API_BASE_URL}/api/consultaMedica/verificarArchivo`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ idConsultaMedica })
+            });
+
+            const data = await response.json();    
+            const descargarRecetaButton = document.querySelector(`.button-top-right[data-id="${idConsultaMedica}"]`);
+            const subirRecetaButton = document.querySelector(`.button-bottom-right[data-id="${idConsultaMedica}"]`);
+
+            if (descargarRecetaButton && subirRecetaButton) {
+                if (data.archivoAsociado) {
+                    descargarRecetaButton.style.display = 'inline-block';
+                    subirRecetaButton.style.display = 'none';
+                } else {
+                    subirRecetaButton.style.display = 'inline-block';
+                    descargarRecetaButton.style.display = 'none';
+                }
+            }
+        } catch (error) {
+            console.error(`Error al verificar el archivo para idConsultaMedica ${idConsultaMedica}:`, error);
+            alert("Hubo un error al verificar el archivo de la consulta.");
+        }
+    };
+
+    document.getElementById("upload-button").addEventListener("click", function(event) {
+        const fileInput = document.getElementById("file-input");
+        const file = fileInput.files[0];
+    
+        if (!file) {
+            alert("Por favor, selecciona un archivo PDF.");
+            return;
+        }
+    
+        if (file.type !== "application/pdf") {
+            alert("Solo se permiten archivos PDF.");
+            return;
+        }
+    
+        const formData = new FormData();
+        formData.append("archivo", file);
+    
+        const idConsultaMedica = document.getElementById("upload-file-modal").getAttribute("data-id-consulta");
+        formData.append("idConsultaMedica", idConsultaMedica);
+    
+        const token = localStorage.getItem("token");
+    
+        if (!token) {
+            alert("No se encontró un token válido. Por favor, inicia sesión.");
+            return;
+        }
+    
+        fetch(`${API_BASE_URL}/api/consultaMedica/insertarArchivoConsulta`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.mensaje === 'Archivo subido correctamente') {
+                alert("Archivo subido exitosamente.");
+                fileInput.value = '';
+                document.getElementById("upload-file-modal").classList.add("hidden"); 
+                verificarArchivoEnConsulta(idConsultaMedica);
+            } else {
+                alert("Hubo un error al subir el archivo: " + data.detalle);
+            }
+        })
+        .catch(error => {
+            alert("Error en la subida del archivo: " + error.message);
+        });
+    });
+    
+    const descargarArchivo = (idConsultaMedica) => {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            alert("No se encontró un token válido. Por favor, inicia sesión.");
+            return;
+        }
+
+        fetch(`${API_BASE_URL}/api/consultaMedica/obtenerArchivoConsulta/${idConsultaMedica}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('No se pudo recuperar el archivo');
+            }
+            return response.blob(); 
+        })
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const ventana = window.open(url, '_blank');
+            if (!ventana) {
+                alert("No se pudo abrir el archivo en una nueva ventana.");
+            }
+        })
+        .catch(error => {
+            alert("Error al mostrar el archivo: " + error.message);
+        });
     };
 });

@@ -30,6 +30,7 @@
                 <h1 id="patient-name">Información del paciente</h1>
                 <div id="profile-container"></div>
                 <button id="validated-button" disabled>Validar Paciente</button>
+                <button id="update-button" disabled>Actualizar información</button>
             </section>           
 
             <section class="medical-history">
@@ -88,6 +89,19 @@
             <div class="modal-actions">
                 <button id="save-edit-expediente">Guardar</button>
                 <button id="cancel-edit-expediente">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="upload-file-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Subir archivo PDF</h3>
+            <form id="upload-form" enctype="multipart/form-data">
+                <input type="file" id="file-input" accept=".pdf" />
+            </form>
+            <div class="modal-actions">
+                <button type="submit" id="upload-button">Subir archivo</button>
+                <button type="button" id="cancel-upload">Cancelar</button>
             </div>
         </div>
     </div>

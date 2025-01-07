@@ -51,7 +51,7 @@ function mostrarConsultaEmergencia(consultaEmergencia) {
 
     const container = document.getElementById("emergency-entries-container");
     container.innerHTML = '';
-    const pacienteNombre = "Nombre de paciente:" + consultaEmergencia.nombrePersona || "Nombre no disponible";
+    const pacienteNombre = "Nombre de paciente:" + consultaEmergencia.nombre || "Nombre no disponible";
     const patientNameElement = document.getElementById("patient-name");
     patientNameElement.textContent = pacienteNombre;
 

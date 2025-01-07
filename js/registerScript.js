@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     const form = document.getElementById("registration-form");
     const hospitalSelect = document.getElementById("hospital");
 
-    const API_BASE_URL = "http://localhost:3000/api";
+    const API_BASE_URL = "https://21d64cmx-3000.usw3.devtunnels.ms/";
 
     const regexTelefono = /^[0-9]{10}$/;
     const regexCorreo = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     async function cargarHospitales() {
         try {
-            const response = await fetch(`${API_BASE_URL}/hospital/obtenerHospitales`);
+            const response = await fetch(`${API_BASE_URL}api/hospital/obtenerHospitales`);
             if (!response.ok) {
                 throw new Error("Error al obtener la lista de hospitales.");
             }
@@ -113,7 +113,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         };
 
         try {
-            const pacienteResponse = await fetch(`${API_BASE_URL}/crearPaciente/crearPaciente`, {
+            const pacienteResponse = await fetch(`${API_BASE_URL}api/crearPaciente/crearPaciente`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -135,7 +135,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
             contactoData.idPaciente = idPaciente;
 
-            const contactoResponse = await fetch(`${API_BASE_URL}/contactos/insertarContacto`, {
+            const contactoResponse = await fetch(`${API_BASE_URL}api/contactos/insertarContacto`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

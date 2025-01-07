@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:3000";
+const API_BASE_URL = "https://21d64cmx-3000.usw3.devtunnels.ms/";
 
 function showForm(role) {
     document.getElementById('form-paciente').style.display = 'none';
@@ -33,7 +33,7 @@ function redirectToPage(role) {
 
 async function iniciarSesion(email, password, role) {
     try {
-        const response = await fetch(`${API_BASE_URL}/api/iniciarSesion/iniciarSesion`, {
+        const response = await fetch(`${API_BASE_URL}api/iniciarSesion/iniciarSesion`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password, role }),

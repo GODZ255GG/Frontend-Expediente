@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:3000";
+const API_BASE_URL = "https://21d64cmx-3000.usw3.devtunnels.ms/";
 
 async function buscarConsultaEmergencia() {
     const inputField = document.getElementById("search-input");
@@ -17,7 +17,7 @@ async function buscarConsultaEmergencia() {
             return;
         }
 
-        const response = await fetch(`${API_BASE_URL}/api/consultaEmergencia/obtenerConsultaEmergencia/${CURP}`, {
+        const response = await fetch(`${API_BASE_URL}api/consultaEmergencia/obtenerConsultaEmergencia/${CURP}`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`,

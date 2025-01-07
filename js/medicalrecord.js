@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 idPersonalMedico: localStorage.getItem("id")
             };
     
-            const response = await fetch(API_BASE_URL + '/api/consultaEmergencia/insertar', {
+            const response = await fetch(API_BASE_URL + 'api/consultaEmergencia/insertar', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    const API_BASE_URL = "http://localhost:3000";
+    const API_BASE_URL = "https://21d64cmx-3000.usw3.devtunnels.ms/";
     const searchButton = document.querySelector(".search-button");
     const inputField = document.querySelector(".search-bar input");
     let idPacienteTemporal = null; 
@@ -159,7 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
     
-            const expedienteResponse = await fetch(`${API_BASE_URL}/api/expedienteMedico/recuperar`, {
+            const expedienteResponse = await fetch(`${API_BASE_URL}api/expedienteMedico/recuperar`, {
                 method: "POST",
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -199,7 +199,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return null;
             }
 
-            const consultasResponse = await fetch(`${API_BASE_URL}/api/consultaMedica/recuperarConsultas`, {
+            const consultasResponse = await fetch(`${API_BASE_URL}api/consultaMedica/recuperarConsultas`, {
                 method: "POST",
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -273,7 +273,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const token = localStorage.getItem("token");
 
-            const response = await fetch(`${API_BASE_URL}/api/expedienteMedico/modificar`, {
+            const response = await fetch(`${API_BASE_URL}api/expedienteMedico/modificar`, {
                 method: "PUT",
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -433,7 +433,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return null;
             }
 
-            const response = await fetch(`${API_BASE_URL}/api/consultaMedica/totalConsultas`, {
+            const response = await fetch(`${API_BASE_URL}api/consultaMedica/totalConsultas`, {
                 method: "POST",
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -475,7 +475,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const fechaConsulta = new Date(); 
             const fechaConsultaFormateada = fechaConsulta.toISOString(); 
     
-            const consultaResponse = await fetch(`${API_BASE_URL}/api/consultaMedica/insertarConsultaMedica`, {
+            const consultaResponse = await fetch(`${API_BASE_URL}api/consultaMedica/insertarConsultaMedica`, {
                 method: "POST",
                 headers: {
                     "Authorization": `Bearer ${localStorage.getItem("token")}`,
@@ -531,7 +531,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
     
-            const response = await fetch(`${API_BASE_URL}/api/paciente/verificarValidacion/${idPacienteTemporal}`, {
+            const response = await fetch(`${API_BASE_URL}api/paciente/verificarValidacion/${idPacienteTemporal}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -597,7 +597,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
     
-            const response = await fetch(`${API_BASE_URL}/api/paciente/validarPaciente/${CURP}`, {
+            const response = await fetch(`${API_BASE_URL}api/paciente/validarPaciente/${CURP}`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -681,7 +681,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
     
-            const response = await fetch(`${API_BASE_URL}/api/expedienteMedico/corregirExpedienteMedico/${CURP}`, {
+            const response = await fetch(`${API_BASE_URL}api/expedienteMedico/corregirExpedienteMedico/${CURP}`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -729,7 +729,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            const response = await fetch(`${API_BASE_URL}/api/consultaMedica/verificarArchivo`, {
+            const response = await fetch(`${API_BASE_URL}api/consultaMedica/verificarArchivo`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -784,7 +784,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
     
-        fetch(`${API_BASE_URL}/api/consultaMedica/insertarArchivoConsulta`, {
+        fetch(`${API_BASE_URL}api/consultaMedica/insertarArchivoConsulta`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -815,7 +815,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        fetch(`${API_BASE_URL}/api/consultaMedica/obtenerArchivoConsulta/${idConsultaMedica}`, {
+        fetch(`${API_BASE_URL}api/consultaMedica/obtenerArchivoConsulta/${idConsultaMedica}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,

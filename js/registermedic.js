@@ -4,12 +4,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("registration-form");
     const hospitalSelect = document.getElementById("hospital");
 
-    const API_BASE_URL = "http://localhost:3000/api";
+    const API_BASE_URL = "https://21d64cmx-3000.usw3.devtunnels.ms/";
     let idUsuarioTemporal = null;
 
     async function cargarHospitales() {
         try {
-            const response = await fetch(`${API_BASE_URL}/hospital/obtenerHospitales`);
+            const response = await fetch(`${API_BASE_URL}api/hospital/obtenerHospitales`);
             if (!response.ok) {
                 throw new Error("Error al obtener la lista de hospitales.");
             }
@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         try {
-            const response = await fetch(`http://localhost:3000/api/obtenerPaciente/porCURP/${curp}`);
+            const response = await fetch( API_BASE_URL + `api/obtenerPaciente/porCURP/${curp}`);
             const result = await response.json();
 
             if (response.status === 200 && result.data) {
@@ -105,7 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let tipoPersonalAPI = tipoPersonal === "doctor" ? "Médico" : "Emergencia";
 
         try {
-            const response = await fetch("http://localhost:3000/api/crearMedico", {
+            const response = await fetch(API_BASE_URL + "api/crearMedico", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

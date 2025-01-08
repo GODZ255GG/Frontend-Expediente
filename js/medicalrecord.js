@@ -67,6 +67,8 @@ document.addEventListener("DOMContentLoaded", () => {
     
             if (response.ok) {
                 alert('Consulta de emergencia guardada correctamente.');
+                document.getElementById("emergency-diagnosis").value = '';
+                document.getElementById("emergency-treatment").value = '';
                 closeModal(emergencyModal);
             } else {
                 alert(`Error: ${data.mensaje}`);
@@ -294,6 +296,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const updatedData = await obtenerExpedienteMedico(CURP);
             if (updatedData) {
+                document.getElementById("edit-allergies").value = '';
+                document.getElementById("edit-chronic-diseases").value = '';
                 mostrarExpedienteMedico(updatedData);
             }
         } catch (error) {

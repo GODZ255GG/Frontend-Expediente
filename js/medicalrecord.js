@@ -51,10 +51,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 idPaciente: idPacienteTemporal,
                 idPersonalMedico: localStorage.getItem("id")
             };
-    
+
+            const token = localStorage.getItem("token");
+
             const response = await fetch(API_BASE_URL + 'api/consultaEmergencia/insertar', {
                 method: 'POST',
                 headers: {
+                    "Authorization": `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(consultaEmergencia)

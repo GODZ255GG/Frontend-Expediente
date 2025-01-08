@@ -1,19 +1,20 @@
 const API_BASE_URL = "https://21d64cmx-3000.usw3.devtunnels.ms/";
 let contactoEnEdicion = 0;
 let contactos;
+let token;
 
 document.addEventListener("DOMContentLoaded", () => {
     const editModal = document.getElementById("edit-modal");
     const addModal = document.getElementById("add-modal");
     const emergencyContactList = document.getElementById("emergency-contact-list");
 
-    // Función para enviar credenciales y recibir el token
     async function obtenerContactos(idPaciente) {
         try {
-            // Capturamos la respuesta en la variable response
+            token = localStorage.getItem("token");
+
             const response = await fetch(API_BASE_URL + `api/contactos/obtenerContactos/${idPaciente}`, {
                 method: "GET",
-                headers: { "Content-Type": "application/json" }
+                headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
             });
 
             // Validamos si la respuesta no es satisfactoria (status >= 400)
@@ -185,6 +186,7 @@ async function editContacto(contacto) {
         const response = await fetch(API_BASE_URL + 'api/contactos/actualizarContacto', {
             method: 'PUT',
             headers: {
+                "Authorization": `Bearer ${token}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(contacto)
@@ -205,7 +207,10 @@ async function editContacto(contacto) {
 async function deleteContacto(idContacto) {
     try {
         const response = await fetch(API_BASE_URL + `api/contactos/eliminarContacto/${idContacto}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: {
+                "Authorization": `Bearer ${token}`
+            },
         });
 
         const data = await response.json();

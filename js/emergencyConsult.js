@@ -1,5 +1,17 @@
 const API_BASE_URL = "https://21d64cmx-3000.usw3.devtunnels.ms/";
 
+function protegerRutaPaciente() {
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("role");
+
+    if (!token || role !== "medico") {
+        alert("Acceso denegado. No cuentas con los permisos necesarios.");
+        window.location.href = "login.html";
+    }
+}
+
+protegerRutaPaciente();
+
 async function buscarConsultaEmergencia() {
     const inputField = document.getElementById("search-input");
     const CURP = inputField.value.trim();

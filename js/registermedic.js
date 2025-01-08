@@ -1,3 +1,14 @@
+function protegerRutaPaciente() {
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("role");
+
+    if (!token || role !== "admin") {
+        alert("Acceso denegado. No cuentas con los permisos necesarios.");
+        window.location.href = "login.html";
+    }
+}
+protegerRutaPaciente();
+
 document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.getElementById("search-input");
     const searchButton = document.getElementById("search-button");
@@ -6,10 +17,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const API_BASE_URL = "https://21d64cmx-3000.usw3.devtunnels.ms/";
     let idUsuarioTemporal = null;
+    let token;
 
     async function cargarHospitales() {
         try {
-            const response = await fetch(`${API_BASE_URL}api/hospital/obtenerHospitales`);
+            token = localStorage.getItem("token");
+            const response = await fetch(`${API_BASE_URL}api/hospital/obtenerHospitales`, {
+                method: "GET",
+                headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
+            });
             if (!response.ok) {
                 throw new Error("Error al obtener la lista de hospitales.");
             }
@@ -52,7 +68,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         try {
-            const response = await fetch( API_BASE_URL + `api/obtenerPaciente/porCURP/${curp}`);
+            token = localStorage.getItem("token");
+            const response = await fetch( API_BASE_URL + `api/obtenerPaciente/porCURP/${curp}`, {
+                method: "GET",
+                headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
+            });
             const result = await response.json();
 
             if (response.status === 200 && result.data) {
@@ -105,10 +125,11 @@ document.addEventListener("DOMContentLoaded", () => {
         let tipoPersonalAPI = tipoPersonal === "doctor" ? "Médico" : "Emergencia";
 
         try {
+            token = localStorage.getItem("token");
             const response = await fetch(API_BASE_URL + "api/crearMedico", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`, "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
                     CURP: document.getElementById("curp").value,

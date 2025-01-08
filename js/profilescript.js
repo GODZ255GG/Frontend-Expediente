@@ -2,6 +2,17 @@ const API_BASE_URL = "https://21d64cmx-3000.usw3.devtunnels.ms/";
 let contactoEnEdicion = 0;
 let contactos;
 let token;
+function protegerRutaPaciente() {
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("role");
+
+    if (!token || role !== "paciente") {
+        alert("Acceso denegado. No cuentas con los permisos necesarios.");
+        window.location.href = "login.html";
+    }
+}
+
+protegerRutaPaciente();
 
 document.addEventListener("DOMContentLoaded", () => {
     const editModal = document.getElementById("edit-modal");

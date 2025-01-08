@@ -49,6 +49,7 @@ async function iniciarSesion(email, password, role) {
 
         localStorage.setItem("token", data.token);
         localStorage.setItem("id", data.id);
+        localStorage.setItem("role", role);
 
         redirectToPage(role);
     } catch (err) {

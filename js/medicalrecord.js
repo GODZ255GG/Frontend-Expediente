@@ -684,6 +684,21 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("Por favor, complete todos los campos antes de actualizar.");
             return;
         }
+
+        if (alergias.length > 500) {
+            alert("Las alergías no pueden tener más de 500 caracteres.");
+            return;
+        }
+
+        if (enfermedadesCronicas.length > 500) {
+            alert("Las enfermedades crónicas no pueden tener más de 500 caracteres.");
+            return;
+        }
+
+        if (tratamientoActual.length > 500) {
+            alert("El tratamiento actual no puede tener más de 500 caracteres.");
+            return;
+        }
     
         const CURP = inputField.value.trim(); 
     

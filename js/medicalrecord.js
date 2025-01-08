@@ -25,6 +25,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const closeModal = (modal) => {
         if (modal) {
+            document.getElementById("consultation-diagnosis").value = '';
+            document.getElementById("consultation-treatment").value = '';
             modal.classList.add("hidden");
         } else {
             console.error("Modal no encontrado.");
@@ -476,6 +478,16 @@ document.addEventListener("DOMContentLoaded", () => {
     
             if (!idPersonalMedico) {
                 alert("No se pudo obtener el id del médico.");
+                return;
+            }
+
+            if (diagnostico.length > 500) {
+                alert("El diagnóstico no puede tener más de 500 caracteres.");
+                return;
+            }
+    
+            if (tratamiento.length > 500) {
+                alert("El tratamiento no puede tener más de 500 caracteres.");
                 return;
             }
     

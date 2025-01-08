@@ -402,7 +402,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    //Paginación
     prevButton.addEventListener("click", () => {
         if (paginaActual > 1) {
             paginaActual--;
@@ -477,7 +476,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    //Registro
     async function registrarConsultaMedica(diagnostico, tratamiento) {
         try {
             const idPaciente = idPacienteTemporal;
@@ -547,7 +545,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
     
-    //Validar paciente
     const validarPaciente = async () => {
         if (!idPacienteTemporal) {
             alert("No se ha encontrado un paciente. Por favor, realiza una búsqueda primero.");
@@ -682,7 +679,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    //Corregir expediente
     updateButton.addEventListener("click", async () => {
         const alergiasField = document.getElementById("patient-allergies");
         const enfermedadesCronicasField = document.getElementById("patient-chronic-diseases");
@@ -765,7 +761,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("patient-current-treatment").contentEditable = false;
     };
 
-    //Archivo de consulta
     const verificarArchivoEnConsulta = async (idConsultaMedica) => {
         try {
             const token = localStorage.getItem("token");

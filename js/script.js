@@ -1,6 +1,6 @@
 /**
- * @param {Event} event - Evento del enlace o botón
- * @param {string} sectionId - ID de la sección destino
+ * @param {Event} event 
+ * @param {string} sectionId 
  */
 function scrollToSection(event, sectionId) {
   event.preventDefault(); 

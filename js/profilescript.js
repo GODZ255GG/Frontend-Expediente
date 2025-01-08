@@ -28,15 +28,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
             });
 
-            // Validamos si la respuesta no es satisfactoria (status >= 400)
             if (!response.ok) throw new Error('Error al obtener contactos');
 
             contactos = await response.json();
-            emergencyContactList.innerHTML = ''; // Limpiar la lista
+            emergencyContactList.innerHTML = ''; 
 
             let tutor = "";
 
-            // Crear los elementos de contacto
             contactos.forEach(contacto => {
                 tutor = contacto.esTutor ? "Sí" : "No";
 
@@ -64,9 +62,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const addContactBtn = document.getElementById("add-contact-btn");
             if (contactos.length >= 2) {
-                addContactBtn.disabled = true;  // Deshabilitar el botón
+                addContactBtn.disabled = true;  
             } else {
-                addContactBtn.disabled = false; // Habilitar el botón si hay menos de 2 contactos
+                addContactBtn.disabled = false; 
             }
         } catch (err) {
             console.error(error);
@@ -76,7 +74,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     obtenerContactos(localStorage.getItem("id"));
 
-    // Función para abrir el modal de edición
     window.openEditModal = (id, telefono, parentesco, tutor) => {
         contactoEnEdicion = id;
         document.getElementById("edit-number").value = telefono;
@@ -85,18 +82,15 @@ document.addEventListener("DOMContentLoaded", () => {
         editModal.style.display = "flex";
     };
 
-    // Función para cerrar el modal de edición
     window.closeEditModal = () => {
         editModal.style.display = "none";
     };
 
-    // Guardar cambios al editar un contacto
     window.saveChanges = () => {
         const number = document.getElementById("edit-number").value;
         const family = document.getElementById("edit-family").value;
         const esTutor = document.getElementById("is-tutor-edit").checked;
 
-        // Validaciones
         if (!validatePhone(number)) {
             alert("El teléfono debe contener solo números y tener al menos 10 dígitos.");
             return;
@@ -118,30 +112,25 @@ document.addEventListener("DOMContentLoaded", () => {
         editContacto(contactoActualizado);
     };
 
-    // Función para eliminar un contacto
     window.deleteContact = (id) => {
         deleteContacto(id);
     };
 
-    // Abrir el modal para agregar un nuevo contacto
     document.getElementById("add-contact-btn").addEventListener("click", () => {
         addModal.style.display = "flex";
     });
 
-    // Cerrar el modal de agregar contacto
     window.closeAddModal = () => {
         addModal.style.display = "none";
         document.getElementById("add-contact-form").reset();
     };
 
-    // Agregar un nuevo contacto
     window.addContact = () => {
         const name = document.getElementById("contact-name").value;
         const relationship = document.getElementById("contact-relationship").value;
         const phone = document.getElementById("contact-phone").value;
         const esTutor = document.getElementById("is-tutor").checked;
 
-        // Validaciones
         if (!validateText(name)) {
             alert("El nombre solo puede contener letras y espacios.");
             return;
@@ -184,7 +173,7 @@ async function addContacto(nuevoContacto) {
         alert(data.mensaje);
 
         if (response.ok) {
-            window.location.reload(); // Recargar la página para ver el nuevo contacto
+            window.location.reload(); 
         }
     } catch (error) {
         console.error(error);
@@ -236,13 +225,11 @@ async function deleteContacto(idContacto) {
     }
 }
 
-// Función para validar que solo contenga letras y espacios
 const validateText = (text) => {
     const regex = /^[a-zA-ZÁÉÍÓÚáéíóúÑñ\s]+$/;
     return regex.test(text);
 };
 
-// Función para validar que solo contenga números y tenga al menos 10 dígitos
 const validatePhone = (phone) => {
     const regex = /^[0-9]{10,}$/;
     return regex.test(phone);
